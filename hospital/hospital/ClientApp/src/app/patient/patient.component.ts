@@ -20,7 +20,6 @@ export class PatientComponent {
       error => console.error(error));
 
     http.get<PatientRoomView[]>(baseUrl + 'api/Patient/Room' + '?PatientID=1004').subscribe(result => {
-      console.error(result);
       this.rooms = result;
     },
       error => console.error(error));

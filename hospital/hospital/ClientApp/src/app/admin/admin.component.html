@@ -1,0 +1,186 @@
+<h1>Привет, админ!</h1>
+
+<h2>Докторы</h2>
+<p *ngIf="!doctors"><em>Loading...</em></p>
+<table class='table table-striped' *ngIf="doctors">
+  <thead>
+    <tr>
+      <th>Доктор</th>
+      <th>Телефон</th>
+      <th>Адрес</th>
+      <th>Дата рождения</th>
+      <th>Начало работы</th>
+      <th>Конец работы</th>
+      <th>Должность</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let doctor of doctors">
+      <td>{{ doctor.name }}</td>
+      <td>{{ doctor.phone }}</td>
+      <td>{{ doctor.address }}</td>
+      <td>{{ doctor.bd | date}}</td>
+      <td>{{ doctor.workstart }}</td>
+      <td>{{ doctor.workend }}</td>
+      <td>{{ doctor.position }}</td>
+      <td>Изменить</td>
+      <td>Удалить</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Пациенты</h2>
+<p *ngIf="!patients"><em>Loading...</em></p>
+<table class='table table-striped' *ngIf="patients">
+  <thead>
+    <tr>
+      <th>Пациент</th>
+      <th>Серия</th>
+      <th>Номер</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let patient of patients">
+      <td>{{ patient.name }}</td>
+      <td>{{ patient.passportserial }}</td>
+      <td>{{ patient.passportnumber }}</td>
+      <td>Удалить</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Кабинеты</h2>
+<p *ngIf="!cabinets"><em>Loading...</em></p>
+<table class='table table-striped' *ngIf="cabinets">
+  <thead>
+    <tr>
+      <th>Номер</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let cabinet of cabinets">
+      <td>{{ cabinet.number }}</td>
+      <td>Удалить</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Палаты</h2>
+<p *ngIf="!rooms"><em>Loading...</em></p>
+<table class='table table-striped' *ngIf="rooms">
+  <thead>
+    <tr>
+      <th>Номер</th>
+      <th>Доктор</th>
+      <th>Места</th>
+      <th>Свободно</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let room of rooms">
+      <td>{{ room.number }}</td>
+      <td>{{ room.name }}</td>
+      <td>{{ room.places }}</td>
+      <td>{{ room.free }}</td>
+      <td>Изменить</td>
+      <td>Удалить</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Международная классификация болезней</h2>
+<p *ngIf="!diseases"><em>Loading...</em></p>
+<table class='table table-striped' *ngIf="diseases">
+  <thead>
+    <tr>
+      <th>Код</th>
+      <th>Название</th>
+      <th>Лечение</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let disease of diseases">
+      <td>{{ disease.code }}</td>
+      <td>{{ disease.name }}</td>
+      <td>{{ disease.treatment }}</td>
+      <td>Изменить</td>
+      <td>Удалить</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Должности</h2>
+<p *ngIf="!positions"><em>Loading...</em></p>
+<table class='table table-striped' *ngIf="positions">
+  <thead>
+    <tr>
+      <th>Ключ</th>
+      <th>Наименование</th>
+      <th>Заработная плата</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let position of positions">
+      <td>{{ position.key }}</td>
+      <td>{{ position.name }}</td>
+      <td>{{ position.salary }}</td>
+      <td>Изменить</td>
+      <td>Удалить</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Аутентификация</h2>
+<p *ngIf="!auths"><em>Loading...</em></p>
+<table class='table table-striped' *ngIf="auths">
+  <thead>
+    <tr>
+      <th>Логин</th>
+      <th>Пароль (хэш)</th>
+      <th>Токен</th>
+      <th>ID пользователя</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let auth of auths">
+      <td>{{ auth.login }}</td>
+      <td>{{ auth.passwordhash }}</td>
+      <td>{{ auth.token }}</td>
+      <td>{{ auth.id }}</td>
+      <td>Изменить</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Аудит</h2>
+<p *ngIf="!audits"><em>Loading...</em></p>
+<table class='table table-striped' *ngIf="audits">
+  <thead>
+    <tr>
+      <th>Код операции</th>
+      <th>Логин</th>
+      <th>Действие</th>
+      <th>Время</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let audit of audits">
+      <td>{{ audit.id }}</td>
+      <td>{{ audit.login }}</td>
+      <td>{{ audit.action }}</td>
+      <td>{{ audit.acttime }}</td>
+    </tr>
+  </tbody>
+</table>

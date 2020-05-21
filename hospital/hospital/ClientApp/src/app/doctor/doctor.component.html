@@ -1,0 +1,71 @@
+<h1>Привет, доктор!</h1>
+
+<h2>Приемы</h2>
+<p *ngIf="!appointments"><em>Loading...</em></p>
+<table class='table table-striped' *ngIf="appointments">
+  <thead>
+    <tr>
+      <th>Дата и время</th>
+      <th>Кабинет</th>
+      <th>Пациент</th>
+      <th>Телефон</th>
+      <th>Дата рождения</th>
+      <th>Серия</th>
+      <th>Номер</th>
+      <th>Палата</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let appointment of appointments">
+      <td>{{ appointment.apptime | date : 'medium'  }}</td>
+      <td>{{ appointment.cabinet }}</td>
+      <td>{{ appointment.name }}</td>
+      <td>{{ appointment.phone }}</td>
+      <td>{{ appointment.bd | date }}</td>
+      <td>{{ appointment.passportserial }}</td>
+      <td>{{ appointment.passportnumber }}</td>
+      <td>{{ appointment.room }}</td>
+      <td>Отменить</td>
+      <td>Медкарта</td>
+      <td>В палату</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Палаты</h2>
+<p *ngIf="!patients"><em>Loading...</em></p>
+<table class='table table-striped' *ngIf="patients">
+  <thead>
+    <tr>
+      <th>Комната</th>
+      <th>Места</th>
+      <th>Пациент</th>
+      <th>Телефон</th>
+      <th>Дата рождения</th>
+      <th>Серия</th>
+      <th>Номер</th>
+      <th>Поступление</th>
+      <th>Выписка</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let patient of patients">
+      <td>{{ patient.room }}</td>
+      <td>{{ patient.places }}</td>
+      <td>{{ patient.name }}</td>
+      <td>{{ patient.phone }}</td>
+      <td>{{ patient.bd | date }}</td>
+      <td>{{ patient.passportserial }}</td>
+      <td>{{ patient.passportnumber }}</td>
+      <td>{{ patient.arrival | date }}</td>
+      <td>{{ patient.departure | date }}</td>
+      <td>Выписать</td>
+      <td>Медкарта</td>
+    </tr>
+  </tbody>
+</table>

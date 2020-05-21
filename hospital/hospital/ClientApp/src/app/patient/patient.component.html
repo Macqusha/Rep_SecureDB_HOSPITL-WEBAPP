@@ -54,7 +54,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let appointment of appointments">
-      <td>{{ appointment.appTime }}</td>
+      <td>{{ appointment.appTime | date : 'medium' }}</td>
       <td>{{ appointment.name }}</td>
       <td>{{ appointment.cabinet }}</td>
       <td>Отменить</td>

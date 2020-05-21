@@ -96,7 +96,7 @@ namespace hospital.Controllers
                         {
                             result.Add(new PatientAppointmentView()
                             {
-                                AppTime = dbDataRecord["AppTime"].ToString(),
+                                AppTime = DateTime.Parse(dbDataRecord["AppTime"].ToString()),
                                 Name = dbDataRecord["Name"].ToString(),
                                 Cabinet = Convert.ToInt32(dbDataRecord["Cabinet"]),
                                 DoctorID = Convert.ToInt32(dbDataRecord["ID"])
@@ -130,7 +130,7 @@ namespace hospital.Controllers
                                 Name = dbDataRecord["Name"].ToString(),
                                 WorkStart = dbDataRecord["WorkStart"].ToString(),
                                 WorkEnd = dbDataRecord["WorkEnd"].ToString(),
-                                Hired = dbDataRecord["Hired"].ToString(),
+                                Hired = DateTime.Parse(dbDataRecord["Hired"].ToString()),
                             });
                         }
                     }
@@ -158,7 +158,7 @@ namespace hospital.Controllers
         }
         public class PatientAppointmentView
         {
-            public string AppTime { get; set; }
+            public DateTime AppTime { get; set; }
             public string Name { get; set; }
             public int Cabinet { get; set; }
             public int DoctorID { get; set; }
@@ -169,7 +169,7 @@ namespace hospital.Controllers
             public string Name { get; set; }
             public string WorkStart { get; set; }
             public string WorkEnd { get; set; }
-            public string Hired { get; set; }
+            public DateTime Hired { get; set; }
         }
     }
 }
