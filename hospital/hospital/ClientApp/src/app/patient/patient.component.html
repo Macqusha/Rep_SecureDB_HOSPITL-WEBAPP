@@ -1,0 +1,88 @@
+<h1>Привет, пациент!</h1>
+<h2>Медкарта</h2>
+<p *ngIf="!diagnoses"><em>Loading...</em></p>
+<table class='table table-striped' *ngIf="diagnoses">
+  <thead>
+    <tr>
+      <th>Название</th>
+      <th>Лечение</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let diagnosis of diagnoses">
+      <td>{{ diagnosis.name }}</td>
+      <td>{{ diagnosis.treatment }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Палата</h2>
+<p *ngIf="!rooms"><em>Loading...</em></p>
+<table class='table table-striped' *ngIf="rooms">
+  <thead>
+    <tr>
+      <th>Номер палаты</th>
+      <th>Мест</th>
+      <th>Лечащий врач</th>
+      <th>Начало работы</th>
+      <th>Конец работы</th>
+      <th>Должность</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let room of rooms">
+      <td>{{ room.number }}</td>
+      <td>{{ room.places }}</td>
+      <td>{{ room.doctor }}</td>
+      <td>{{ room.workStart }}</td>
+      <td>{{ room.workEnd }}</td>
+      <td>{{ room.position }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Приемы</h2>
+<p *ngIf="!appointments"><em>Loading...</em></p>
+<table class='table table-striped' *ngIf="appointments">
+  <thead>
+    <tr>
+      <th>Дата и время</th>
+      <th>ФИО врача</th>
+      <th>Номер кабинета</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let appointment of appointments">
+      <td>{{ appointment.appTime }}</td>
+      <td>{{ appointment.name }}</td>
+      <td>{{ appointment.cabinet }}</td>
+      <td>Отменить</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Запись на прием</h2>
+<p *ngIf="!doctors"><em>Loading...</em></p>
+<table class='table table-striped' *ngIf="doctors">
+  <thead>
+    <tr>
+      <th>Должность</th>
+      <th>ФИО врача</th>
+      <th>Начало работы</th>
+      <th>Конец работы</th>
+      <th>Начало стажа</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let doctor of doctors">
+      <td>{{ doctor.position }}</td>
+      <td>{{ doctor.name }}</td>
+      <td>{{ doctor.workStart }}</td>
+      <td>{{ doctor.workEnd }}</td>
+      <td>{{ doctor.hired | date }}</td>
+      <td>Записаться</td>
+    </tr>
+  </tbody>
+</table>
