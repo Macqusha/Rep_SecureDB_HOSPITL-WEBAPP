@@ -39,6 +39,7 @@ export class PatientComponent {
 interface PatientDiagnosisView {
   Name: string;
   Treatment: string;
+  Code: string;
 }
 
 interface PatientRoomView {

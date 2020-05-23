@@ -22,7 +22,7 @@ namespace hospital.Controllers
         public IEnumerable<PatientDiagnosisView> Diagnosis([FromQuery] string PatientID)
         {
             var result = new List<PatientDiagnosisView>();
-            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT name, treatment FROM diseases LEFT JOIN diagnosis ON code = diseasecode WHERE patientid = " +
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT code, name, treatment FROM diseases LEFT JOIN diagnosis ON code = diseasecode WHERE patientid = " +
                 PatientID + ";", npgSqlConnection))
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
@@ -35,7 +35,8 @@ namespace hospital.Controllers
                             result.Add(new PatientDiagnosisView()
                             {
                                 Name = dbDataRecord["Name"].ToString(),
-                                Treatment = dbDataRecord["Treatment"].ToString()
+                                Treatment = dbDataRecord["Treatment"].ToString(),
+                                Code = dbDataRecord["Code"].ToString()
                             });
                         }
                     }
@@ -146,6 +147,7 @@ namespace hospital.Controllers
         {
             public string Name { get; set; }
             public string Treatment { get; set; }
+            public string Code { get; set; }
         }
         public class PatientRoomView
         {

@@ -15,22 +15,20 @@
       <th>Палата</th>
       <th></th>
       <th></th>
-      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let appointment of appointments">
       <td>{{ appointment.apptime | date : 'medium'  }}</td>
       <td>{{ appointment.cabinet }}</td>
-      <td>{{ appointment.name }}</td>
+      <td (click)="patientClick(appointment)">{{ appointment.name }}</td>
       <td>{{ appointment.phone }}</td>
       <td>{{ appointment.bd | date }}</td>
       <td>{{ appointment.passportserial }}</td>
       <td>{{ appointment.passportnumber }}</td>
       <td>{{ appointment.room }}</td>
-      <td>Отменить</td>
-      <td>Медкарта</td>
-      <td>В палату</td>
+      <td><button type="button" class="btn btn-outline-danger" (click)="cancelClick(appointment.apptime, appointment.cabinet)">Отменить прием</button></td>
+      <td><button type="button" class="btn btn-outline-info" (click)="medRecordClick(appointment.patientid, appointment.name)">Медкарта</button></td>
     </tr>
   </tbody>
 </table>
@@ -40,7 +38,7 @@
 <table class='table table-striped' *ngIf="patients">
   <thead>
     <tr>
-      <th>Комната</th>
+      <th>Палата</th>
       <th>Места</th>
       <th>Пациент</th>
       <th>Телефон</th>
@@ -49,7 +47,6 @@
       <th>Номер</th>
       <th>Поступление</th>
       <th>Выписка</th>
-      <th></th>
       <th></th>
     </tr>
   </thead>
@@ -64,8 +61,7 @@
       <td>{{ patient.passportnumber }}</td>
       <td>{{ patient.arrival | date }}</td>
       <td>{{ patient.departure | date }}</td>
-      <td>Выписать</td>
-      <td>Медкарта</td>
+      <td><button type="button" class="btn btn-outline-info" (click)="medRecordClick(patient.patientid, patient.name)">Медкарта</button></td>
     </tr>
   </tbody>
 </table>

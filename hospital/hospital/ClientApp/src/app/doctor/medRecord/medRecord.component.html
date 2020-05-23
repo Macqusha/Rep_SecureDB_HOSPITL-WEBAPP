@@ -1,0 +1,23 @@
+<p align="right">
+  <button type="button" class="btn btn-outline-success" style="margin-left:1rem" (click)="func()">Добавить диагноз</button>
+  <button type="button" class="btn btn-outline-success" style="margin-left:1rem" (click)="func()">Поселить в палату</button>
+  <button type="button" class="btn btn-outline-danger" style="margin-left:1rem" (click)="func()">Выписать</button>
+</p>
+<br> 
+<p *ngIf="!records"><em>Loading...</em></p>
+<table class='table table-striped' *ngIf="records">
+  <thead>
+    <tr>
+      <th>Код</th>
+      <th>Название</th>
+      <th>Лечение</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let record of records">
+      <td>{{ record.code }}</td>
+      <td>{{ record.name }}</td>
+      <td>{{ record.treatment }}</td>
+    </tr>
+  </tbody>
+</table>

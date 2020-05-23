@@ -9,7 +9,12 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { PatientComponent } from './patient/patient.component';
 import { DoctorComponent } from './doctor/doctor.component';
+import { MedRecordComponent } from './doctor/medRecord/medRecord.component';
 import { AdminComponent } from './admin/admin.component';
+import { DialogModule } from 'primeng/dialog';
+import { DynamicDialogModule } from 'primeng/dynamicdialog'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 @NgModule({
   declarations: [
@@ -18,12 +23,16 @@ import { AdminComponent } from './admin/admin.component';
     HomeComponent,
     PatientComponent,
     DoctorComponent,
-    AdminComponent
+    AdminComponent,
+    MedRecordComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
+    DialogModule,
+    BrowserAnimationsModule,
+    DynamicDialogModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'patient', component: PatientComponent },
@@ -32,6 +41,9 @@ import { AdminComponent } from './admin/admin.component';
     ])
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    MedRecordComponent
+  ],
 })
 export class AppModule { }
