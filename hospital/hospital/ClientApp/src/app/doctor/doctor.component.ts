@@ -25,13 +25,18 @@ export class DoctorComponent {
     });
   }
 
-  cancelClick(time, cabinet)
-  {
-    alert(time);
+  cancelAppointment(key) {
+    this.http.delete(this.baseUrl + 'api/Patient/DelAppointment' + '?Key=' + key).subscribe(result => {
+      this.http.get<DoctorAppointmentView[]>(this.baseUrl + 'api/Doctor/Appointment' + '?DoctorID=101').subscribe(result => {
+        this.appointments = result;
+      },
+        error => console.error(error)); 
+    },
+      error => console.error(error));
   }
 
 
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string,
+  constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string,
     public dialogService: DialogService,
   ) {
     http.get<DoctorAppointmentView[]>(baseUrl + 'api/Doctor/Appointment'+'?DoctorID=101').subscribe(result => {
@@ -47,6 +52,7 @@ export class DoctorComponent {
 }
 
 interface DoctorAppointmentView {
+  key: number;
   apptime: Date;
   cabinet: number;
   name: string;

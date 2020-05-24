@@ -22,7 +22,7 @@ namespace hospital.Controllers
         public IEnumerable<DoctorAppointmentView> Appointment([FromQuery] string DoctorID)
         {
             var result = new List<DoctorAppointmentView>();
-            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT apptime, cabinet, name, phone, bd, passportserial, passportnumber, room, id AS patientid FROM appointment LEFT JOIN patients ON appointment.patient = patients.ID WHERE doctor = " +
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT key, apptime, cabinet, name, phone, bd, passportserial, passportnumber, room, id AS patientid FROM appointment LEFT JOIN patients ON appointment.patient = patients.ID WHERE doctor = " +
                 DoctorID + ";", npgSqlConnection))
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
@@ -34,6 +34,7 @@ namespace hospital.Controllers
                         {
                             result.Add(new DoctorAppointmentView()
                             {
+                                key = Convert.ToInt32(dbDataRecord["key"]),
                                 apptime = DateTime.Parse(dbDataRecord["apptime"].ToString()),
                                 cabinet = Convert.ToInt32(dbDataRecord["cabinet"]),
                                 name = dbDataRecord["name"].ToString(),
@@ -93,6 +94,7 @@ namespace hospital.Controllers
 
         public class DoctorAppointmentView
         {
+            public int key { get; set; }
             public DateTime apptime { get; set; }
             public int cabinet { get; set; }
             public string name { get; set; }

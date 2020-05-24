@@ -85,7 +85,7 @@ namespace hospital.Controllers
         public IEnumerable<PatientAppointmentView> Appointment([FromQuery] string PatientID)
         {
             var result = new List<PatientAppointmentView>();
-            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT apptime, name, cabinet, id FROM appointment LEFT JOIN Doctors ON appointment.doctor = doctors.ID WHERE patient = " +
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT key, apptime, name, cabinet, id FROM appointment LEFT JOIN Doctors ON appointment.doctor = doctors.ID WHERE patient = " +
                 PatientID + ";", npgSqlConnection))
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
@@ -97,6 +97,7 @@ namespace hospital.Controllers
                         {
                             result.Add(new PatientAppointmentView()
                             {
+                                Key = Convert.ToInt32(dbDataRecord["Key"]),
                                 AppTime = DateTime.Parse(dbDataRecord["AppTime"].ToString()),
                                 Name = dbDataRecord["Name"].ToString(),
                                 Cabinet = Convert.ToInt32(dbDataRecord["Cabinet"]),
@@ -141,7 +142,20 @@ namespace hospital.Controllers
             }
             npgSqlConnection.Close();
             return result;
-        }        
+        }
+
+        [HttpDelete("[action]")]
+        public void DelAppointment([FromQuery] string key)
+        {
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("DELETE FROM appointment WHERE key = " +
+                key + ";", npgSqlConnection))
+            {
+                npgSqlCommand.ExecuteNonQuery();
+                npgSqlCommand.Dispose();
+            }
+            npgSqlConnection.Close();
+        }
+
 
         public class PatientDiagnosisView
         {
@@ -160,6 +174,7 @@ namespace hospital.Controllers
         }
         public class PatientAppointmentView
         {
+            public int Key { get; set; }
             public DateTime AppTime { get; set; }
             public string Name { get; set; }
             public int Cabinet { get; set; }

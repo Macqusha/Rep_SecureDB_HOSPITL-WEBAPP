@@ -1,5 +1,13 @@
 <h1>Привет, админ!</h1>
-
+<br />
+<p align="center">
+  <button type="button" class="btn btn-outline-success" style="margin-left:1rem" (click)="addDoctor()">Зарегистрировать врача</button>
+  <button type="button" class="btn btn-outline-success" style="margin-left:1rem" (click)="addDoctor()">Добавить кабинет</button>
+  <button type="button" class="btn btn-outline-success" style="margin-left:1rem" (click)="addDoctor()">Добавить палату</button>
+  <button type="button" class="btn btn-outline-success" style="margin-left:1rem" (click)="addDoctor()">Расширить МКБ</button>
+  <button type="button" class="btn btn-outline-success" style="margin-left:1rem" (click)="addDoctor()">Добавить должность</button>
+</p>
+<br />
 <h2>Докторы</h2>
 <p *ngIf="!doctors"><em>Loading...</em></p>
 <table class='table table-striped' *ngIf="doctors">
@@ -14,7 +22,6 @@
       <th>Должность</th>
       <th></th>
       <th></th>
-      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -26,8 +33,8 @@
       <td>{{ doctor.workstart }}</td>
       <td>{{ doctor.workend }}</td>
       <td>{{ doctor.position }}</td>
-      <td>Изменить</td>
-      <td>Удалить</td>
+      <td><button type="button" class="btn btn-outline-secondary" (click)="change(doctor.ID)">Редактировать</button></td>
+      <td><button type="button" class="btn btn-outline-danger" (click)="remove(doctor.ID)">Удалить</button></td>
     </tr>
   </tbody>
 </table>
@@ -48,7 +55,7 @@
       <td>{{ patient.name }}</td>
       <td>{{ patient.passportserial }}</td>
       <td>{{ patient.passportnumber }}</td>
-      <td>Удалить</td>
+      <td><button type="button" class="btn btn-outline-danger" (click)="remove(patient.patientid)">Удалить</button></td>
     </tr>
   </tbody>
 </table>
@@ -65,7 +72,7 @@
   <tbody>
     <tr *ngFor="let cabinet of cabinets">
       <td>{{ cabinet.number }}</td>
-      <td>Удалить</td>
+      <td><button type="button" class="btn btn-outline-danger" (click)="remove(cabinet.number)">Удалить</button></td>
     </tr>
   </tbody>
 </table>
@@ -89,8 +96,8 @@
       <td>{{ room.name }}</td>
       <td>{{ room.places }}</td>
       <td>{{ room.free }}</td>
-      <td>Изменить</td>
-      <td>Удалить</td>
+      <td><button type="button" class="btn btn-outline-secondary" (click)="remove(room.number)">Редактировать</button></td>
+      <td><button type="button" class="btn btn-outline-danger" (click)="remove(room.number)">Удалить</button></td>
     </tr>
   </tbody>
 </table>
@@ -103,8 +110,6 @@
       <th>Код</th>
       <th>Название</th>
       <th>Лечение</th>
-      <th></th>
-      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -112,8 +117,6 @@
       <td>{{ disease.code }}</td>
       <td>{{ disease.name }}</td>
       <td>{{ disease.treatment }}</td>
-      <td>Изменить</td>
-      <td>Удалить</td>
     </tr>
   </tbody>
 </table>
@@ -135,8 +138,8 @@
       <td>{{ position.key }}</td>
       <td>{{ position.name }}</td>
       <td>{{ position.salary }}</td>
-      <td>Изменить</td>
-      <td>Удалить</td>
+      <td><button type="button" class="btn btn-outline-secondary" (click)="change()">Редактировать</button></td>
+      <td><button type="button" class="btn btn-outline-danger" (click)="remove()">Удалить</button></td>
     </tr>
   </tbody>
 </table>
@@ -159,7 +162,7 @@
       <td>{{ auth.passwordhash }}</td>
       <td>{{ auth.token }}</td>
       <td>{{ auth.id }}</td>
-      <td>Изменить</td>
+      <td><button type="button" class="btn btn-outline-secondary" (click)="remove(auth.id)">Редактировать</button></td>
     </tr>
   </tbody>
 </table>

@@ -27,7 +27,7 @@
       <td>{{ appointment.passportserial }}</td>
       <td>{{ appointment.passportnumber }}</td>
       <td>{{ appointment.room }}</td>
-      <td><button type="button" class="btn btn-outline-danger" (click)="cancelClick(appointment.apptime, appointment.cabinet)">Отменить прием</button></td>
+      <td><button type="button" class="btn btn-outline-danger" (click)="cancelAppointment(appointment.key)">Отменить прием</button></td>
       <td><button type="button" class="btn btn-outline-info" (click)="medRecordClick(appointment.patientid, appointment.name)">Медкарта</button></td>
     </tr>
   </tbody>

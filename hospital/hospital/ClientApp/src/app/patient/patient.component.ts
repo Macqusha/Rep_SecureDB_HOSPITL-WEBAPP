@@ -12,8 +12,17 @@ export class PatientComponent {
   public appointments: PatientAppointmentView[];
   public doctors: PatientDoctorView[];
 
+  cancelAppointment(key) {
+    this.http.delete(this.baseUrl + 'api/Patient/DelAppointment' + '?Key=' + key).subscribe(result => {
+      this.http.get<PatientAppointmentView[]>(this.baseUrl + 'api/Patient/Appointment' + '?PatientID=1004').subscribe(result => {
+        this.appointments = result;
+      },
+        error => console.error(error));
+    },
+      error => console.error(error));
+  }
 
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+  constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) {
     http.get<PatientDiagnosisView[]>(baseUrl + 'api/Patient/Diagnosis'+'?PatientID=1004').subscribe(result => {
       this.diagnoses = result;
     },
@@ -52,6 +61,7 @@ interface PatientRoomView {
 }
 
 interface PatientAppointmentView {
+  Key: number;
   AppTime: Date;
   Name: string;
   Cabinet: number;
@@ -59,6 +69,7 @@ interface PatientAppointmentView {
 }
 
 interface PatientDoctorView {
+  ID: number;
   Position: string;
   Name: string;
   WorkStart: Time;

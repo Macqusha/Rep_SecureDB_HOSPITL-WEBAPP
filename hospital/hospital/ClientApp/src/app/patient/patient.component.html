@@ -57,7 +57,7 @@
       <td>{{ appointment.appTime | date : 'medium' }}</td>
       <td>{{ appointment.name }}</td>
       <td>{{ appointment.cabinet }}</td>
-      <td>Отменить</td>
+      <td><button type="button" class="btn btn-outline-danger" (click)="cancelAppointment(appointment.key)">Отменить прием</button></td>
     </tr>
   </tbody>
 </table>
@@ -82,7 +82,7 @@
       <td>{{ doctor.workStart }}</td>
       <td>{{ doctor.workEnd }}</td>
       <td>{{ doctor.hired | date }}</td>
-      <td>Записаться</td>
+      <td><button type="button" class="btn btn-outline-success" (click)="makeAppointment(doctor.ID)">Записаться</button></td>
     </tr>
   </tbody>
 </table>
