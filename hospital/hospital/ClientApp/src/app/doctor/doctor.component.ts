@@ -29,20 +29,6 @@ export class DoctorComponent {
     });
   }
 
-  myLoadingFunction() {
-    this.http.get<DoctorAppointmentView[]>(this.baseUrl + 'api/Doctor/Appointment' + '?DoctorID=101').subscribe(result => {
-      this.appointments = result;
-    },
-      error => console.error(error));
-
-    this.http.get<DoctorPatientView[]>(this.baseUrl + 'api/Doctor/Patient' + '?DoctorID=101').subscribe(result => {
-      this.patients = result;
-    },
-      error => console.error(error));
-  
-  }
-
-
   cancelAppointment(key) {
     this.http.delete(this.baseUrl + 'api/Patient/DelAppointment' + '?Key=' + key).subscribe(result => {
       this.http.get<DoctorAppointmentView[]>(this.baseUrl + 'api/Doctor/Appointment' + '?DoctorID=101').subscribe(result => {
@@ -53,19 +39,22 @@ export class DoctorComponent {
       error => console.error(error));
   }
 
-
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string,
     public dialogService: DialogService,
   ) {
-    http.get<DoctorAppointmentView[]>(baseUrl + 'api/Doctor/Appointment'+'?DoctorID=101').subscribe(result => {
+    this.myLoadingFunction();
+  }
+
+  myLoadingFunction() {
+    this.http.get<DoctorAppointmentView[]>(this.baseUrl + 'api/Doctor/Appointment' + '?DoctorID=101').subscribe(result => {
       this.appointments = result;
     },
       error => console.error(error));
-        
-    http.get<DoctorPatientView[]>(baseUrl + 'api/Doctor/Patient' + '?DoctorID=101').subscribe(result => {
+
+    this.http.get<DoctorPatientView[]>(this.baseUrl + 'api/Doctor/Patient' + '?DoctorID=101').subscribe(result => {
       this.patients = result;
     },
-      error => console.error(error));  
+      error => console.error(error));
   }
 }
 
