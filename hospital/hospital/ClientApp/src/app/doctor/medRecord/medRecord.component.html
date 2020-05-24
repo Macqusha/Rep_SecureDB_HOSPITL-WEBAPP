@@ -1,9 +1,26 @@
-<p align="right">
-  <button type="button" class="btn btn-outline-success" style="margin-left:1rem" (click)="func()">Добавить диагноз</button>
-  <button type="button" class="btn btn-outline-success" style="margin-left:1rem" (click)="func()">Поселить в палату</button>
-  <button type="button" class="btn btn-outline-danger" style="margin-left:1rem" (click)="func()">Выписать</button>
+<h2>Действия</h2>
+<p>
+  <label>Выберите диагноз: </label>
+  <select #selectedcode style="margin-left:1rem">
+    <option *ngFor="let disease of diseases" value={{disease.code}}>{{ disease.code }} {{ disease.name }} </option>
+  </select>
+  <button type="button" class="btn btn-outline-success" style="margin-left:1rem" (click)="addDiagnosis()">Добавить диагноз</button>
 </p>
-<br> 
+<br />
+<p *ngIf="!curRoom" >
+  <label>Выберите палату: </label>
+  <select #selectedroom style="margin-left:1rem">
+    <option value=""></option>
+    <option *ngFor="let room of rooms" value={{room.number}}>{{ room.number }} (всего мест: {{ room.places }}, свободных: {{ room.free }}) </option>
+  </select>
+  <button type="button" class="btn btn-outline-success" style="margin-left:1rem" (click)="addRoom()">Записать в палату</button>
+
+</p>
+<p *ngIf="curRoom">
+  <button type="button" class="btn btn-outline-danger" style="margin-left:1rem" (click)="removeRoom()">Выписать</button>
+</p>
+<br>
+<h2>История болезни</h2>
 <p *ngIf="!records"><em>Loading...</em></p>
 <table class='table table-striped' *ngIf="records">
   <thead>

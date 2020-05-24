@@ -42,7 +42,7 @@ namespace hospital.Controllers
                                 bd = DateTime.Parse(dbDataRecord["bd"].ToString()),
                                 passportserial = Convert.ToInt32(dbDataRecord["passportserial"]),
                                 passportnumber = Convert.ToInt32(dbDataRecord["passportnumber"]),
-                                room = Convert.ToInt32(dbDataRecord["room"]),
+                                room = doformatINT(dbDataRecord["room"].ToString()),
                                 patientid = Convert.ToInt32(dbDataRecord["patientid"]),
                             });
                         }
@@ -53,6 +53,33 @@ namespace hospital.Controllers
             }
             npgSqlConnection.Close();
             return result;
+        }
+
+        private int? doformatINT(string param)
+        {
+            int? rr;
+            if (param == "")
+            {
+                rr = null;
+            }
+            else
+            {
+                rr = int.Parse(param);
+            }
+            return rr;
+        }
+        private DateTime? doformatDT(string param)
+        {
+            DateTime? rr;
+            if (param == "")
+            {
+                rr = null;
+            }
+            else
+            {
+                rr = DateTime.Parse(param);
+            }
+            return rr;
         }
 
         [HttpGet("[action]")]
@@ -78,8 +105,8 @@ namespace hospital.Controllers
                                 bd = DateTime.Parse(dbDataRecord["bd"].ToString()),
                                 passportserial = Convert.ToInt32(dbDataRecord["passportserial"]),
                                 passportnumber = Convert.ToInt32(dbDataRecord["passportnumber"]),
-                                arrival = DateTime.Parse(dbDataRecord["arrival"].ToString()),
-                                departure = DateTime.Parse(dbDataRecord["departure"].ToString()),
+                                arrival = doformatDT(dbDataRecord["arrival"].ToString()),
+                                departure = doformatDT(dbDataRecord["departure"].ToString()),
                                 patientid = Convert.ToInt32(dbDataRecord["patientid"]),
                             });
                         }
@@ -92,6 +119,70 @@ namespace hospital.Controllers
             return result;
         }
 
+        [HttpPost("[action]")]
+        public void AddDisease([FromQuery] string PatientID, string Code)
+        {
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO diagnosis VALUES (" + PatientID +",'" + Code + "');", npgSqlConnection))
+            {
+                npgSqlCommand.ExecuteNonQuery();
+                npgSqlCommand.Dispose();
+            }
+            npgSqlConnection.Close();
+        }
+
+        [HttpGet("[action]")]
+        public IEnumerable<DoctorRoomView> GetFreeRooms([FromQuery] string DoctorID)
+        {
+            var result = new List<DoctorRoomView>();
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT number, places, places - count(room) AS free FROM rooms LEFT JOIN patients ON number = room LEFT JOIN doctors on fixeddoctor = doctors.id WHERE doctors.id = "+DoctorID+" GROUP BY number,doctors.id;", npgSqlConnection))
+            {
+                using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
+                {
+
+                    if (npgSqlDataReader.HasRows)
+                    {
+                        foreach (DbDataRecord dbDataRecord in npgSqlDataReader)
+                        {
+                            if (Convert.ToInt32(dbDataRecord["free"]) > 0)
+                            result.Add(new DoctorRoomView()
+                            {
+                                number = Convert.ToInt32(dbDataRecord["number"]),
+                                places = Convert.ToInt32(dbDataRecord["places"]),
+                                free = Convert.ToInt32(dbDataRecord["free"]),
+                            });
+                        }
+                    }
+                    npgSqlDataReader.Close();
+                }
+                npgSqlCommand.Dispose();
+            }
+            npgSqlConnection.Close();
+            return result;
+        }
+
+        [HttpPost("[action]")]
+        public void AddRoom([FromQuery] string PatientID, string Room)
+        {
+            if (Room != " " && Room != null)
+                using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("UPDATE patients SET arrival = now(), departure = null, room = " + Room +" WHERE id = " + PatientID +";", npgSqlConnection))
+                {
+                    npgSqlCommand.ExecuteNonQuery();
+                    npgSqlCommand.Dispose();
+                }
+            npgSqlConnection.Close();
+        }
+
+        [HttpPost("[action]")]
+        public void RemoveRoom([FromQuery] string PatientID)
+        {
+                using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("UPDATE patients SET departure = now(), room = null WHERE id = " + PatientID + ";", npgSqlConnection))
+                {
+                    npgSqlCommand.ExecuteNonQuery();
+                    npgSqlCommand.Dispose();
+                }
+            npgSqlConnection.Close();
+        }
+
         public class DoctorAppointmentView
         {
             public int key { get; set; }
@@ -102,7 +193,7 @@ namespace hospital.Controllers
             public DateTime bd { get; set; }
             public int passportserial { get; set; }
             public int passportnumber { get; set; }
-            public int room { get; set; }
+            public int? room { get; set; }
             public int patientid { get; set; }            
         }
         public class DoctorPatientView
@@ -114,9 +205,15 @@ namespace hospital.Controllers
             public DateTime bd { get; set; }
             public int passportserial { get; set; }
             public int passportnumber { get; set; }
-            public DateTime arrival { get; set; }
-            public DateTime departure { get; set; }
+            public DateTime? arrival { get; set; }
+            public DateTime? departure { get; set; }
             public int patientid { get; set; }
+        }
+        public class DoctorRoomView
+        {
+            public int number { get; set; }
+            public int places { get; set; }
+            public int free { get; set; }
         }
     }
 }

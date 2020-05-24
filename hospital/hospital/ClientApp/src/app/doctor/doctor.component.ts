@@ -14,16 +14,34 @@ export class DoctorComponent {
   public appointments: DoctorAppointmentView[];
   public patients: DoctorPatientView[];
 
-  medRecordClick(id, name)//добавить диагноз, поселить в палату, выписать - внутри
+  medRecordClick(id, name, room)
   {
     const ref = this.dialogService.open(MedRecordComponent, {
       header: 'Медицинская карта пациента ' + name,
       width: '70%',
       data: {
-        patientID:id,
+        patientID: id,
+        room: room,
       },
+    })
+    ref.onDestroy.subscribe(() => {
+      this.myLoadingFunction()
     });
   }
+
+  myLoadingFunction() {
+    this.http.get<DoctorAppointmentView[]>(this.baseUrl + 'api/Doctor/Appointment' + '?DoctorID=101').subscribe(result => {
+      this.appointments = result;
+    },
+      error => console.error(error));
+
+    this.http.get<DoctorPatientView[]>(this.baseUrl + 'api/Doctor/Patient' + '?DoctorID=101').subscribe(result => {
+      this.patients = result;
+    },
+      error => console.error(error));
+  
+  }
+
 
   cancelAppointment(key) {
     this.http.delete(this.baseUrl + 'api/Patient/DelAppointment' + '?Key=' + key).subscribe(result => {

@@ -28,7 +28,7 @@
       <td>{{ appointment.passportnumber }}</td>
       <td>{{ appointment.room }}</td>
       <td><button type="button" class="btn btn-outline-danger" (click)="cancelAppointment(appointment.key)">Отменить прием</button></td>
-      <td><button type="button" class="btn btn-outline-info" (click)="medRecordClick(appointment.patientid, appointment.name)">Медкарта</button></td>
+      <td><button type="button" class="btn btn-outline-info" (click)="medRecordClick(appointment.patientid, appointment.name, appointment.room)">Медкарта</button></td>
     </tr>
   </tbody>
 </table>
@@ -46,7 +46,6 @@
       <th>Серия</th>
       <th>Номер</th>
       <th>Поступление</th>
-      <th>Выписка</th>
       <th></th>
     </tr>
   </thead>
@@ -60,8 +59,7 @@
       <td>{{ patient.passportserial }}</td>
       <td>{{ patient.passportnumber }}</td>
       <td>{{ patient.arrival | date }}</td>
-      <td>{{ patient.departure | date }}</td>
-      <td><button type="button" class="btn btn-outline-info" (click)="medRecordClick(patient.patientid, patient.name)">Медкарта</button></td>
+      <td><button type="button" class="btn btn-outline-info" (click)="medRecordClick(patient.patientid, patient.name, patient.room)">Медкарта</button></td>
     </tr>
   </tbody>
 </table>

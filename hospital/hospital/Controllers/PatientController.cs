@@ -52,7 +52,7 @@ namespace hospital.Controllers
         public IEnumerable<PatientRoomView> Room([FromQuery] string PatientID)
         {
             var result = new List<PatientRoomView>();
-            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT number, places, doctors.name AS doctor, workstart, workend, positions.name AS position FROM patients LEFT JOIN Rooms ON patients.room = rooms.number LEFT JOIN doctors ON rooms.fixeddoctor = doctors.id LEFT JOIN Positions ON positioncode = key WHERE patients.ID = " +
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT number, places, doctors.name AS doctor, workstart, workend, positions.name AS position FROM patients LEFT JOIN Rooms ON patients.room = rooms.number LEFT JOIN doctors ON rooms.fixeddoctor = doctors.id LEFT JOIN Positions ON positioncode = key WHERE number > 0 AND patients.ID = " +
                 PatientID + ";", npgSqlConnection))
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())

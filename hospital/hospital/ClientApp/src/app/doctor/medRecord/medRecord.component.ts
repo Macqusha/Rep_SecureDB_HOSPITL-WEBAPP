@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Time } from '@angular/common';
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
@@ -10,11 +10,46 @@ import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 })
 export class MedRecordComponent implements OnInit {
   public records: MedicalRecordView[] = [];
-
-
-  func() {
-    ;
+  public diseases: MedRecordDiseaseView[];
+  public rooms: MedRecordFreeRoomsView[];
+  public curRoom: number | undefined = this.config.data.room;
+  
+  @ViewChild('selectedcode', { static: false })
+  private selectedcode;  
+  addDiagnosis() {
+    this.http.post<MedRecordDiseaseView[]>(this.baseUrl + 'api/Doctor/AddDisease' + '?PatientID=' + this.config.data.patientID
+      + '&Code=' + this.selectedcode.nativeElement.value, {}).subscribe(result => {
+        this.http.get<MedicalRecordView[]>(
+          this.baseUrl + 'api/Patient/Diagnosis' + '?PatientID=' + this.config.data.patientID).subscribe(result => {
+            this.records = result;
+          },
+            error => console.error(error));
+    },
+      error => console.error(error));
   }
+
+  @ViewChild('selectedroom', { static: false })
+  private selectedroom;
+  addRoom() {
+    this.http.post<MedRecordDiseaseView[]>(this.baseUrl + 'api/Doctor/AddRoom' + '?PatientID=' + this.config.data.patientID
+      + '&Room=' + this.selectedroom.nativeElement.value, {}).subscribe(result => {
+        this.curRoom = this.selectedroom.nativeElement.value;
+      },
+        error => console.error(error));
+  }
+  removeRoom() {
+    this.http.post<MedRecordDiseaseView[]>(this.baseUrl + 'api/Doctor/RemoveRoom' + '?PatientID=' + this.config.data.patientID, {}).subscribe(result => {
+      this.curRoom = undefined;
+
+      this.http.get<MedRecordFreeRoomsView[]>(this.baseUrl + 'api/Doctor/GetFreeRooms' + '?DoctorID=101').subscribe(result => {
+        this.rooms = result;
+      },
+        error => console.error(error));
+
+    },
+        error => console.error(error));
+  }
+
 
   constructor(
     private http: HttpClient, 
@@ -29,6 +64,16 @@ export class MedRecordComponent implements OnInit {
       this.records = result;
     },
       error => console.error(error));
+
+    this.http.get<MedRecordDiseaseView[]>(this.baseUrl + 'api/Admin/Disease' + '?AdminID=1').subscribe(result => {
+      this.diseases = result;
+    },
+      error => console.error(error));
+
+    this.http.get<MedRecordFreeRoomsView[]>(this.baseUrl + 'api/Doctor/GetFreeRooms' + '?DoctorID=101').subscribe(result => {
+      this.rooms = result;
+    },
+      error => console.error(error));
   }
 }
 
@@ -37,4 +82,16 @@ interface MedicalRecordView {
   code: string;
   name: string;
   treatment: string;
+}
+
+interface MedRecordDiseaseView {
+  code: string;
+  name: string;
+  treatment: string;
+}
+
+interface MedRecordFreeRoomsView {
+  number: number;
+  places: number;
+  free: number;
 }
