@@ -44,10 +44,12 @@
     <None Remove="ClientApp\src\app\doctor\medRecord\medRecord.component.ts" />
     <None Remove="ClientApp\src\app\fetch-data\fetch-data.component.html" />
     <None Remove="ClientApp\src\app\fetch-data\fetch-data.component.ts" />
+    <None Remove="ClientApp\src\app\patient\makeAppointment\makeAppointment.component.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\app\doctor\medRecord\medRecord.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\patient\makeAppointment\makeAppointment.component.ts" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

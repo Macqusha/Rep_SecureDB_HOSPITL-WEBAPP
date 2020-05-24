@@ -10,6 +10,7 @@ import { HomeComponent } from './home/home.component';
 import { PatientComponent } from './patient/patient.component';
 import { DoctorComponent } from './doctor/doctor.component';
 import { MedRecordComponent } from './doctor/medRecord/medRecord.component';
+import { MakeAppointmentComponent } from './patient/makeAppointment/makeAppointment.component';
 import { AdminComponent } from './admin/admin.component';
 import { DialogModule } from 'primeng/dialog';
 import { DynamicDialogModule } from 'primeng/dynamicdialog'
@@ -24,7 +25,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     PatientComponent,
     DoctorComponent,
     AdminComponent,
-    MedRecordComponent
+    MedRecordComponent,
+    MakeAppointmentComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -43,7 +45,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
   providers: [],
   bootstrap: [AppComponent],
   entryComponents: [
-    MedRecordComponent
+    MedRecordComponent,
+    MakeAppointmentComponent,
   ],
 })
 export class AppModule { }

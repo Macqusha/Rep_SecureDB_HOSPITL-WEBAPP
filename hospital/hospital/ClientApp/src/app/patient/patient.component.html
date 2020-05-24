@@ -82,7 +82,7 @@
       <td>{{ doctor.workStart }}</td>
       <td>{{ doctor.workEnd }}</td>
       <td>{{ doctor.hired | date }}</td>
-      <td><button type="button" class="btn btn-outline-success" (click)="makeAppointment(doctor.ID)">Записаться</button></td>
+      <td><button type="button" class="btn btn-outline-success" (click)="makeAppointment(doctor.id, doctor.name, doctor.workStart, doctor.workEnd)">Записаться</button></td>
     </tr>
   </tbody>
 </table>

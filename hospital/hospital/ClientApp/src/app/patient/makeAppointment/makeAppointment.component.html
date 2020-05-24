@@ -1,0 +1,8 @@
+<p>
+  <label>Выберите дату и время приема: </label>
+  <select #selectedparams style="margin-left:1rem">
+    <option *ngFor="let one of dates" value="Date={{ one.date }}&Cabinet={{one.cabinet}}">{{ one.date }} кабинет {{one.cabinet}} </option>
+  </select>
+
+  <button type="button" class="btn btn-outline-success" style="margin-left:1rem" (click)="addAppointment()" ng-class="{hide : active != $index}" ng-click="hideme($index)">Записаться</button>
+</p>
