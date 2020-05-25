@@ -25,6 +25,8 @@ export class MakeAppointmentComponent implements OnInit {
           },
           error => console.error(error));
 
+        alert('Вы успешно записаны на прием.');
+
       },
         error => console.error(error));
   }
