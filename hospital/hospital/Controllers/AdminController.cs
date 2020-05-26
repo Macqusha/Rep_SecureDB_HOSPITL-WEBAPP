@@ -56,7 +56,7 @@ namespace hospital.Controllers
         public IEnumerable<AdminPatientView> Patient([FromQuery] string AdminID)
         {
             var result = new List<AdminPatientView>();
-            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT id AS doctorid, name, passportserial, passportnumber FROM patients;", npgSqlConnection))
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT id AS patientid, name, passportserial, passportnumber FROM patients;", npgSqlConnection))
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
                 {
@@ -67,7 +67,7 @@ namespace hospital.Controllers
                         {
                             result.Add(new AdminPatientView()
                             {
-                                doctorid = Convert.ToInt32(dbDataRecord["doctorid"]),
+                                patientid = Convert.ToInt32(dbDataRecord["patientid"]),
                                 name = dbDataRecord["name"].ToString(),
                                 passportserial = Convert.ToInt32(dbDataRecord["passportserial"]),
                                 passportnumber = Convert.ToInt32(dbDataRecord["passportnumber"]),
@@ -408,6 +408,33 @@ namespace hospital.Controllers
             npgSqlConnection.Close();
         }
 
+        [HttpDelete("[action]")]
+        public void DeletePatient([FromQuery] int ID)
+        {
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("DELETE FROM appointment WHERE patient =" + ID + "; ", npgSqlConnection))
+            {
+                npgSqlCommand.ExecuteNonQuery();
+                npgSqlCommand.Dispose();
+            }
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("DELETE FROM diagnosis WHERE patientid =" + ID + "; ", npgSqlConnection))
+            {
+                npgSqlCommand.ExecuteNonQuery();
+                npgSqlCommand.Dispose();
+            }
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("DELETE FROM authentication WHERE id =" + ID + "; ", npgSqlConnection))
+            {
+                npgSqlCommand.ExecuteNonQuery();
+                npgSqlCommand.Dispose();
+            }
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("DELETE FROM patients WHERE id =" + ID + "; ", npgSqlConnection))
+            {
+                npgSqlCommand.ExecuteNonQuery();
+                npgSqlCommand.Dispose();
+            }
+            npgSqlConnection.Close();
+        }
+        
+
         public class AdminDoctorView
         {
             public int doctorid { get; set; }
@@ -421,7 +448,7 @@ namespace hospital.Controllers
         }
         public class AdminPatientView
         {
-            public int doctorid { get; set; }
+            public int patientid { get; set; }
             public string name { get; set; }
             public int passportserial { get; set; }
             public int passportnumber { get; set; }

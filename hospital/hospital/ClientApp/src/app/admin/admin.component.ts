@@ -233,7 +233,7 @@ export class AdminComponent {
 
       this.http.delete<[]>(this.baseUrl + 'api/Admin/DeletePatient' + "?ID=" + id, {}).subscribe(result => {
 
-        alert('Пациент выписан и удален. Отменены его приемы.');
+        alert('Пациент выписан и удален. Медицинская карта удалена, приемы отменены.');
 
         this.http.get<AdminPatientView[]>(this.baseUrl + 'api/Admin/Patient' + '?AdminID=1').subscribe(result => {
           this.patients = result;
