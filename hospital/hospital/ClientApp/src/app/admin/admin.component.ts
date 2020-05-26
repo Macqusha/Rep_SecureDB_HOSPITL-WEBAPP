@@ -32,7 +32,7 @@ export class AdminComponent {
   docWorkEnd: Time | undefined;
 
   addCab() {
-    if (this.cabinet > 0 && this.cabinet <=299 && !this.cabinets.find((v) => v.number === this.cabinet)) {
+    if (this.cabinet > 0 && this.cabinet <= 299 && !this.cabinets.find((v) => v.number === this.cabinet)) {
       this.http.post<[]>(this.baseUrl + 'api/Admin/AddCabinet' + '?Cabinet=' + this.cabinet, {}).subscribe(result => {
         this.http.get<AdminCabinetView[]>(this.baseUrl + 'api/Admin/Cabinet' + '?AdminID=1').subscribe(result => {
           this.cabinets = result;
@@ -66,7 +66,7 @@ export class AdminComponent {
       && this.selecteddoc.nativeElement.value >= 100) {
       this.http.post<[]>(this.baseUrl + 'api/Admin/AddRoom' + '?Number=' + this.roomNum + '&Places=' + this.roomPlaces + '&Doctor=' +
         this.selecteddoc.nativeElement.value, {}).subscribe(result => {
-        
+
           this.http.get<AdminRoomView[]>(this.baseUrl + 'api/Admin/Room' + '?AdminID=1').subscribe(result => {
             this.rooms = result;
           },
@@ -74,8 +74,8 @@ export class AdminComponent {
 
           this.roomNum = undefined;
           this.roomPlaces = undefined;
-      },
-        error => console.error(error));
+        },
+          error => console.error(error));
     } else {
       alert('Данные введены неверно. Палаты нумеруются числами от 300 до 500 без повторений. ');
       this.roomNum = undefined;
@@ -110,14 +110,14 @@ export class AdminComponent {
           this.diseaseName = undefined;
           this.diseaseTreat = undefined;
 
-      },
-        error => console.error(error));
+        },
+          error => console.error(error));
     } else {
       alert('Данные пусты или дублируют имеющиеся в базе.');
     }
   }
 
-  changeSal(key,salary) {
+  changeSal(key, salary) {
     if (salary > 0) {
       this.http.post<[]>(this.baseUrl + 'api/Admin/ChangeSalary' + '?Key=' + key + "&Salary=" + salary, {}).subscribe(result => {
 
@@ -126,15 +126,15 @@ export class AdminComponent {
         },
           error => console.error(error));
 
-        },
-          error => console.error(error));
+      },
+        error => console.error(error));
     } else {
       alert('Введите новое значение заработной платы.');
     }
   }
 
   addPosition() {
-    if (this.posName != undefined && this.posName != "" && this.posSalary > 0  
+    if (this.posName != undefined && this.posName != "" && this.posSalary > 0
       && !this.positions.find((p) => p.name === this.posName)) {
       this.http.post<[]>(this.baseUrl + 'api/Admin/AddPosition' + '?Name=' + this.posName + "&Salary=" + this.posSalary, {}).subscribe(result => {
 
@@ -146,8 +146,8 @@ export class AdminComponent {
         this.posName = undefined;
         this.posSalary = undefined;
 
-        },
-          error => console.error(error));
+      },
+        error => console.error(error));
     } else {
       alert('Данные пусты или дублируют имеющиеся в базе.');
     }
@@ -179,18 +179,17 @@ export class AdminComponent {
 
     if (maxID > 99 && maxID < 1000 && !(this.docName == undefined) && this.docPhone > 0
       && !(this.docAddress == undefined) && !(this.docBD == undefined)
-      && !(this.docWorkStart == undefined) && !(this.docWorkEnd == undefined) && this.selectedPos.nativeElement.value > 0)
-    {
+      && !(this.docWorkStart == undefined) && !(this.docWorkEnd == undefined) && this.selectedPos.nativeElement.value > 0) {
 
       this.http.post<[]>(this.baseUrl + 'api/Admin/RegisterDoctor' + '?Name=' + this.docName + "&Phone=" + this.docPhone
         + "&Position=" + this.selectedPos.nativeElement.value + "&ID=" + maxID + "&Address=" + this.docAddress
         + "&Birthday=" + this.docBD + "&Start=" + this.docWorkStart + "&End=" + this.docWorkEnd, {}).subscribe(result => {
 
-        alert('Доктор зарегистрирован. Не забудьте сменить ему пароль.');
+          alert('Доктор зарегистрирован. Не забудьте сменить ему пароль.');
 
-        this.http.get<AdminDoctorView[]>(this.baseUrl + 'api/Admin/Doctor' + '?AdminID=1').subscribe(result => {
-          this.doctors = result;
-        },
+          this.http.get<AdminDoctorView[]>(this.baseUrl + 'api/Admin/Doctor' + '?AdminID=1').subscribe(result => {
+            this.doctors = result;
+          },
             error => console.error(error));
 
 
@@ -199,8 +198,8 @@ export class AdminComponent {
           },
             error => console.error(error));
 
-      },
-        error => console.error(error));
+        },
+          error => console.error(error));
     }
     else {
       alert('Некорректные данные. Доктор не зарегистрирован.');
@@ -214,14 +213,14 @@ export class AdminComponent {
 
       this.http.delete<[]>(this.baseUrl + 'api/Admin/DeleteDoctor' + "?ID=" + id, {}).subscribe(result => {
 
-          alert('Доктор удален. Отменены его приемы, выписаны пациенты и удалены палаты номер ' + tt);
+        alert('Доктор удален. Отменены его приемы, выписаны пациенты и удалены палаты номер ' + tt);
 
-          this.http.get<AdminDoctorView[]>(this.baseUrl + 'api/Admin/Doctor' + '?AdminID=1').subscribe(result => {
-            this.doctors = result;
-          },
-            error => console.error(error));
+        this.http.get<AdminDoctorView[]>(this.baseUrl + 'api/Admin/Doctor' + '?AdminID=1').subscribe(result => {
+          this.doctors = result;
         },
           error => console.error(error));
+      },
+        error => console.error(error));
     }
     else {
       alert('Некорректный ID');
@@ -305,7 +304,7 @@ interface AdminDoctorView {
 interface AdminPatientView {
   patientid: number;
   name: string
-  passportnumber: number;  
+  passportnumber: number;
   passportserial: number;
 }
 

@@ -29,7 +29,7 @@ export class PatientComponent {
       this.myLoadingFunction()
     });
   }
-  
+
   cancelAppointment(key) {
     this.http.delete(this.baseUrl + 'api/Patient/DelAppointment' + '?Key=' + key).subscribe(result => {
       this.http.get<PatientAppointmentView[]>(this.baseUrl + 'api/Patient/Appointment' + '?PatientID=1004').subscribe(result => {
@@ -41,7 +41,7 @@ export class PatientComponent {
   }
 
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string,
-    public dialogService: DialogService,) {
+    public dialogService: DialogService, ) {
     this.myLoadingFunction();
   }
 

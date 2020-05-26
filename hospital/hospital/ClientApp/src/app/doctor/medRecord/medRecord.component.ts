@@ -13,9 +13,9 @@ export class MedRecordComponent implements OnInit {
   public diseases: MedRecordDiseaseView[];
   public rooms: MedRecordFreeRoomsView[];
   public curRoom: number | undefined = this.config.data.room;
-  
+
   @ViewChild('selectedcode', { static: false })
-  private selectedcode;  
+  private selectedcode;
   addDiagnosis() {
     this.http.post<MedRecordDiseaseView[]>(this.baseUrl + 'api/Doctor/AddDisease' + '?PatientID=' + this.config.data.patientID
       + '&Code=' + this.selectedcode.nativeElement.value, {}).subscribe(result => {
@@ -24,8 +24,8 @@ export class MedRecordComponent implements OnInit {
             this.records = result;
           },
             error => console.error(error));
-    },
-      error => console.error(error));
+      },
+        error => console.error(error));
   }
 
   @ViewChild('selectedroom', { static: false })
@@ -47,23 +47,23 @@ export class MedRecordComponent implements OnInit {
         error => console.error(error));
 
     },
-        error => console.error(error));
+      error => console.error(error));
   }
 
 
   constructor(
-    private http: HttpClient, 
-    @Inject('BASE_URL') private baseUrl: string, 
+    private http: HttpClient,
+    @Inject('BASE_URL') private baseUrl: string,
     private config: DynamicDialogConfig,
-    ) {
-    
+  ) {
+
   }
   ngOnInit(): void {
     this.http.get<MedicalRecordView[]>(
-      this.baseUrl + 'api/Patient/Diagnosis'+'?PatientID=' + this.config.data.patientID).subscribe(result => {
-      this.records = result;
-    },
-      error => console.error(error));
+      this.baseUrl + 'api/Patient/Diagnosis' + '?PatientID=' + this.config.data.patientID).subscribe(result => {
+        this.records = result;
+      },
+        error => console.error(error));
 
     this.http.get<MedRecordDiseaseView[]>(this.baseUrl + 'api/Admin/Disease' + '?AdminID=1').subscribe(result => {
       this.diseases = result;

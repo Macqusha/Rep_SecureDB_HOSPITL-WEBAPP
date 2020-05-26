@@ -14,8 +14,7 @@ export class DoctorComponent {
   public appointments: DoctorAppointmentView[];
   public patients: DoctorPatientView[];
 
-  medRecordClick(id, name, room)
-  {
+  medRecordClick(id, name, room) {
     const ref = this.dialogService.open(MedRecordComponent, {
       header: 'Медицинская карта пациента ' + name,
       width: '70%',
@@ -34,7 +33,7 @@ export class DoctorComponent {
       this.http.get<DoctorAppointmentView[]>(this.baseUrl + 'api/Doctor/Appointment' + '?DoctorID=101').subscribe(result => {
         this.appointments = result;
       },
-        error => console.error(error)); 
+        error => console.error(error));
     },
       error => console.error(error));
   }
@@ -71,7 +70,7 @@ interface DoctorAppointmentView {
   patientid: number;
 }
 
-interface DoctorPatientView {  
+interface DoctorPatientView {
   room: number;
   places: number;
   name: string;

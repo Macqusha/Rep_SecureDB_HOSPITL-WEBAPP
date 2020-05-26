@@ -23,7 +23,7 @@ export class MakeAppointmentComponent implements OnInit {
           '&End=' + this.config.data.workEnd).subscribe(result => {
             this.dates = result;
           },
-          error => console.error(error));
+            error => console.error(error));
 
         alert('Вы успешно записаны на прием.');
 
@@ -41,9 +41,9 @@ export class MakeAppointmentComponent implements OnInit {
   ngOnInit(): void {
     this.http.get<FreeDatesView[]>(this.baseUrl + 'api/Patient/GetFreeDates' + '?DoctorID=101' + '&Start=' + this.config.data.workStart +
       '&End=' + this.config.data.workEnd).subscribe(result => {
-      this.dates = result;
-    },
-      error => console.error(error));
+        this.dates = result;
+      },
+        error => console.error(error));
   }
 }
 

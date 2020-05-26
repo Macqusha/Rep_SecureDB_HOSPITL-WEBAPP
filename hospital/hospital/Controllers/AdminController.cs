@@ -22,11 +22,11 @@ namespace hospital.Controllers
         public IEnumerable<AdminDoctorView> Doctor([FromQuery] string AdminID)
         {
             var result = new List<AdminDoctorView>();
-            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT id AS doctorid, doctors.name, phone, address, bd, workstart, workend, positions.name AS position FROM doctors LEFT JOIN positions ON positioncode = key;", npgSqlConnection))
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT id AS doctorid, doctors.name, phone, address, bd, workstart, workend, " +
+                "positions.name AS position FROM doctors LEFT JOIN positions ON positioncode = key;", npgSqlConnection))
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
                 {
-
                     if (npgSqlDataReader.HasRows)
                     {
                         foreach (DbDataRecord dbDataRecord in npgSqlDataReader)
@@ -60,7 +60,6 @@ namespace hospital.Controllers
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
                 {
-
                     if (npgSqlDataReader.HasRows)
                     {
                         foreach (DbDataRecord dbDataRecord in npgSqlDataReader)
@@ -90,7 +89,6 @@ namespace hospital.Controllers
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
                 {
-
                     if (npgSqlDataReader.HasRows)
                     {
                         foreach (DbDataRecord dbDataRecord in npgSqlDataReader)
@@ -117,7 +115,6 @@ namespace hospital.Controllers
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
                 {
-
                     if (npgSqlDataReader.HasRows)
                     {
                         foreach (DbDataRecord dbDataRecord in npgSqlDataReader)
@@ -148,7 +145,6 @@ namespace hospital.Controllers
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
                 {
-
                     if (npgSqlDataReader.HasRows)
                     {
                         foreach (DbDataRecord dbDataRecord in npgSqlDataReader)
@@ -177,7 +173,6 @@ namespace hospital.Controllers
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
                 {
-
                     if (npgSqlDataReader.HasRows)
                     {
                         foreach (DbDataRecord dbDataRecord in npgSqlDataReader)
@@ -206,7 +201,6 @@ namespace hospital.Controllers
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
                 {
-
                     if (npgSqlDataReader.HasRows)
                     {
                         foreach (DbDataRecord dbDataRecord in npgSqlDataReader)
@@ -236,7 +230,6 @@ namespace hospital.Controllers
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
                 {
-
                     if (npgSqlDataReader.HasRows)
                     {
                         foreach (DbDataRecord dbDataRecord in npgSqlDataReader)
@@ -257,12 +250,11 @@ namespace hospital.Controllers
             npgSqlConnection.Close();
             return result;
         }
-                
+
         [HttpPost("[action]")]
         public void AddCabinet([FromQuery] int Cabinet)
         {
-            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO cabinets VALUES (" +
-                Cabinet + ");", npgSqlConnection))
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO cabinets VALUES (" + Cabinet + ");", npgSqlConnection))
             {
                 npgSqlCommand.ExecuteNonQuery();
                 npgSqlCommand.Dispose();
@@ -296,7 +288,7 @@ namespace hospital.Controllers
         [HttpDelete("[action]")]
         public void DeleteRoom([FromQuery] int Number)
         {
-            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("UPDATE patients SET departure = now(), room = null WHERE room = " + Number + "; " + 
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("UPDATE patients SET departure = now(), room = null WHERE room = " + Number + "; " +
                 "DELETE FROM rooms WHERE number = " + Number + ";", npgSqlConnection))
             {
                 npgSqlCommand.ExecuteNonQuery();
@@ -308,7 +300,7 @@ namespace hospital.Controllers
         [HttpPost("[action]")]
         public void AddDisease([FromQuery] string Code, string Name, string Treat)
         {
-            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO diseases VALUES('"+ Code + "', '"+ Name + "', '"+ Treat + "'); ", npgSqlConnection))
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO diseases VALUES('" + Code + "', '" + Name + "', '" + Treat + "'); ", npgSqlConnection))
             {
                 npgSqlCommand.ExecuteNonQuery();
                 npgSqlCommand.Dispose();
@@ -330,7 +322,7 @@ namespace hospital.Controllers
         [HttpPost("[action]")]
         public void AddPosition([FromQuery] string Name, int Salary)
         {
-            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO positions (name, salary) VALUES ('"+ Name + "', "+ Salary + "); ", npgSqlConnection))
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO positions (name, salary) VALUES ('" + Name + "', " + Salary + "); ", npgSqlConnection))
             {
                 npgSqlCommand.ExecuteNonQuery();
                 npgSqlCommand.Dispose();
@@ -341,7 +333,7 @@ namespace hospital.Controllers
         [HttpPost("[action]")]
         public void ChangePass([FromQuery] int ID, string Pass)
         {
-            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("UPDATE authentication SET passwordhash = '"+Pass+"' WHERE id = "+ID+";", npgSqlConnection))
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("UPDATE authentication SET passwordhash = '" + Pass + "' WHERE id = " + ID + ";", npgSqlConnection))
             {
                 npgSqlCommand.ExecuteNonQuery();
                 npgSqlCommand.Dispose();
@@ -353,19 +345,17 @@ namespace hospital.Controllers
         public void RegisterDoctor([FromQuery] string Name, [FromQuery]  int Phone, [FromQuery]  string Address, [FromQuery] string Birthday,
             [FromQuery] string Start, [FromQuery] string End, [FromQuery] int Position, [FromQuery] int ID)
         {
-            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO doctors (ID, Name, Phone, Address, BD, WorkStart, WorkEnd, Hired, PositionCode) VALUES (" 
-                + ID + ", '" + Name + "', " + Phone + ", '" + Address + "', '" + Birthday + "', '" + Start + "', '" + End + "', '" 
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO doctors (ID, Name, Phone, Address, BD, WorkStart, WorkEnd, Hired, PositionCode) VALUES ("
+                + ID + ", '" + Name + "', " + Phone + ", '" + Address + "', '" + Birthday + "', '" + Start + "', '" + End + "', '"
                 + DateTime.Today + "', " + Position + ");", npgSqlConnection))
             {
                 npgSqlCommand.ExecuteNonQuery();
                 npgSqlCommand.Dispose();
             }
-            
-            string login = Translit((Name.Split(' ')[0]).ToLower()) + ID.ToString();
 
-            int token = ID;
-            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO authentication (id, login, passwordhash) VALUES (" + 
-                + ID + ",'" + login + "','0000');", npgSqlConnection))
+            string login = Translit((Name.Split(' ')[0]).ToLower()) + ID.ToString();
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO authentication (id, login, passwordhash) VALUES (" +
+                +ID + ",'" + login + "','0000');", npgSqlConnection))
             {
                 npgSqlCommand.ExecuteNonQuery();
                 npgSqlCommand.Dispose();
@@ -433,7 +423,7 @@ namespace hospital.Controllers
             }
             npgSqlConnection.Close();
         }
-        
+
 
         public class AdminDoctorView
         {

@@ -22,12 +22,12 @@ namespace hospital.Controllers
         public IEnumerable<PatientDiagnosisView> Diagnosis([FromQuery] string PatientID)
         {
             var result = new List<PatientDiagnosisView>();
-            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT code, name, treatment FROM diseases LEFT JOIN diagnosis ON code = diseasecode WHERE patientid = " +
-                PatientID + ";", npgSqlConnection))
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT code, name, treatment FROM diseases " +
+                "LEFT JOIN diagnosis ON code = diseasecode WHERE patientid = " + PatientID + ";", npgSqlConnection))
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
                 {
-                    
+
                     if (npgSqlDataReader.HasRows)
                     {
                         foreach (DbDataRecord dbDataRecord in npgSqlDataReader)
@@ -52,7 +52,9 @@ namespace hospital.Controllers
         public IEnumerable<PatientRoomView> Room([FromQuery] string PatientID)
         {
             var result = new List<PatientRoomView>();
-            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT number, places, doctors.name AS doctor, workstart, workend, positions.name AS position FROM patients LEFT JOIN Rooms ON patients.room = rooms.number LEFT JOIN doctors ON rooms.fixeddoctor = doctors.id LEFT JOIN Positions ON positioncode = key WHERE number > 0 AND patients.ID = " +
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT number, places, doctors.name AS doctor, " +
+                "workstart, workend, positions.name AS position FROM patients LEFT JOIN Rooms ON patients.room = rooms.number " +
+                "LEFT JOIN doctors ON rooms.fixeddoctor = doctors.id LEFT JOIN Positions ON positioncode = key WHERE number > 0 AND patients.ID = " +
                 PatientID + ";", npgSqlConnection))
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
@@ -85,8 +87,8 @@ namespace hospital.Controllers
         public IEnumerable<PatientAppointmentView> Appointment([FromQuery] string PatientID)
         {
             var result = new List<PatientAppointmentView>();
-            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT key, apptime, name, cabinet, id FROM appointment LEFT JOIN Doctors ON appointment.doctor = doctors.ID WHERE patient = " +
-                PatientID + ";", npgSqlConnection))
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT key, apptime, name, cabinet, id FROM appointment " +
+                "LEFT JOIN Doctors ON appointment.doctor = doctors.ID WHERE patient = " + PatientID + ";", npgSqlConnection))
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
                 {
@@ -117,7 +119,8 @@ namespace hospital.Controllers
         public IEnumerable<PatientDoctorView> Doctor()
         {
             var result = new List<PatientDoctorView>();
-            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT id, positions.name AS position, doctors.name, workstart, workend, hired FROM doctors LEFT JOIN positions on doctors.positionCode = positions.key;", npgSqlConnection))
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT id, positions.name AS position, doctors.name, " +
+                "workstart, workend, hired FROM doctors LEFT JOIN positions on doctors.positionCode = positions.key;", npgSqlConnection))
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
                 {
@@ -177,7 +180,7 @@ namespace hospital.Controllers
                     npgSqlDataReader.Close();
                 }
                 npgSqlCommand.Dispose();
-            }            
+            }
 
             var workstart = Start.Split(':');
             var workend = End.Split(':');
@@ -215,11 +218,11 @@ namespace hospital.Controllers
             {
                 if (i.TimeOfDay >= firstDate.TimeOfDay && i.TimeOfDay <= LastDate.TimeOfDay)
                     for (int j = 0; j < cabinets.Count(); j++)
-                    result.Add(new FreeDatesView()
-                    {
-                        date = i.ToString(),
-                        cabinet = cabinets[j]
-                    });
+                        result.Add(new FreeDatesView()
+                        {
+                            date = i.ToString(),
+                            cabinet = cabinets[j]
+                        });
             }
 
             var apps = new List<PatientAppointmentView>();
@@ -227,7 +230,6 @@ namespace hospital.Controllers
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
                 {
-
                     if (npgSqlDataReader.HasRows)
                     {
                         foreach (DbDataRecord dbDataRecord in npgSqlDataReader)
@@ -244,7 +246,7 @@ namespace hospital.Controllers
                 }
                 npgSqlCommand.Dispose();
             }
-            
+
             for (int i = 0; i < apps.Count; i++)
                 for (int j = 0; j < result.Count; j++)
                 {
@@ -255,7 +257,7 @@ namespace hospital.Controllers
                             result.Remove(result[j]);
                             j--;
                         }
-                        
+
                     }
                 }
 
@@ -289,13 +291,13 @@ namespace hospital.Controllers
                         }
                         npgSqlDataReader.Close();
                     }
-                    npgSqlCommand1.Dispose();                    
+                    npgSqlCommand1.Dispose();
                 }
 
                 if (allCorrect)
                 {
-                    //Непосредственно применение
-                    using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO appointment (cabinet,doctor,patient,apptime) VALUES (" + Cabinet + "," + DoctorID + "," + PatientID + ",'" + Date + "');", npgSqlConnection))
+                    using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO appointment (cabinet,doctor,patient,apptime) " +
+                        "VALUES (" + Cabinet + "," + DoctorID + "," + PatientID + ",'" + Date + "');", npgSqlConnection))
                     {
                         npgSqlCommand.ExecuteNonQuery();
                         npgSqlCommand.Dispose();

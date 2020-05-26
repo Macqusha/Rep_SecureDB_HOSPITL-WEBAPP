@@ -27,7 +27,6 @@ namespace hospital.Controllers
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
                 {
-
                     if (npgSqlDataReader.HasRows)
                     {
                         foreach (DbDataRecord dbDataRecord in npgSqlDataReader)
@@ -86,12 +85,12 @@ namespace hospital.Controllers
         public IEnumerable<DoctorPatientView> Patient([FromQuery] string DoctorID)
         {
             var result = new List<DoctorPatientView>();
-            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT room, places, name, phone, bd, passportserial, passportnumber, arrival, departure, id AS patientid FROM rooms LEFT JOIN patients ON rooms.number = room WHERE name is not null AND fixeddoctor = " +
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT room, places, name, phone, bd, passportserial, passportnumber, arrival, " +
+                "departure, id AS patientid FROM rooms LEFT JOIN patients ON rooms.number = room WHERE name is not null AND fixeddoctor = " +
                 DoctorID + ";", npgSqlConnection))
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
                 {
-
                     if (npgSqlDataReader.HasRows)
                     {
                         foreach (DbDataRecord dbDataRecord in npgSqlDataReader)
@@ -122,7 +121,7 @@ namespace hospital.Controllers
         [HttpPost("[action]")]
         public void AddDisease([FromQuery] string PatientID, string Code)
         {
-            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO diagnosis VALUES (" + PatientID +",'" + Code + "');", npgSqlConnection))
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO diagnosis VALUES (" + PatientID + ",'" + Code + "');", npgSqlConnection))
             {
                 npgSqlCommand.ExecuteNonQuery();
                 npgSqlCommand.Dispose();
@@ -134,22 +133,23 @@ namespace hospital.Controllers
         public IEnumerable<DoctorRoomView> GetFreeRooms([FromQuery] string DoctorID)
         {
             var result = new List<DoctorRoomView>();
-            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT number, places, places - count(room) AS free FROM rooms LEFT JOIN patients ON number = room LEFT JOIN doctors on fixeddoctor = doctors.id WHERE doctors.id = "+DoctorID+" GROUP BY number,doctors.id;", npgSqlConnection))
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT number, places, places - count(room) AS free FROM rooms " +
+                "LEFT JOIN patients ON number = room LEFT JOIN doctors on fixeddoctor = doctors.id WHERE doctors.id = " + 
+                DoctorID + " GROUP BY number,doctors.id;", npgSqlConnection))
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
                 {
-
                     if (npgSqlDataReader.HasRows)
                     {
                         foreach (DbDataRecord dbDataRecord in npgSqlDataReader)
                         {
                             if (Convert.ToInt32(dbDataRecord["free"]) > 0)
-                            result.Add(new DoctorRoomView()
-                            {
-                                number = Convert.ToInt32(dbDataRecord["number"]),
-                                places = Convert.ToInt32(dbDataRecord["places"]),
-                                free = Convert.ToInt32(dbDataRecord["free"]),
-                            });
+                                result.Add(new DoctorRoomView()
+                                {
+                                    number = Convert.ToInt32(dbDataRecord["number"]),
+                                    places = Convert.ToInt32(dbDataRecord["places"]),
+                                    free = Convert.ToInt32(dbDataRecord["free"]),
+                                });
                         }
                     }
                     npgSqlDataReader.Close();
@@ -164,7 +164,8 @@ namespace hospital.Controllers
         public void AddRoom([FromQuery] string PatientID, string Room)
         {
             if (Room != " " && Room != null)
-                using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("UPDATE patients SET arrival = now(), departure = null, room = " + Room +" WHERE id = " + PatientID +";", npgSqlConnection))
+                using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("UPDATE patients SET arrival = now(), departure = null, room = " + Room +
+                    " WHERE id = " + PatientID + ";", npgSqlConnection))
                 {
                     npgSqlCommand.ExecuteNonQuery();
                     npgSqlCommand.Dispose();
@@ -175,11 +176,12 @@ namespace hospital.Controllers
         [HttpPost("[action]")]
         public void RemoveRoom([FromQuery] string PatientID)
         {
-                using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("UPDATE patients SET departure = now(), room = null WHERE id = " + PatientID + ";", npgSqlConnection))
-                {
-                    npgSqlCommand.ExecuteNonQuery();
-                    npgSqlCommand.Dispose();
-                }
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("UPDATE patients SET departure = now(), room = null WHERE id = " + 
+                PatientID + ";", npgSqlConnection))
+            {
+                npgSqlCommand.ExecuteNonQuery();
+                npgSqlCommand.Dispose();
+            }
             npgSqlConnection.Close();
         }
 
@@ -194,7 +196,7 @@ namespace hospital.Controllers
             public int passportserial { get; set; }
             public int passportnumber { get; set; }
             public int? room { get; set; }
-            public int patientid { get; set; }            
+            public int patientid { get; set; }
         }
         public class DoctorPatientView
         {
