@@ -257,6 +257,156 @@ namespace hospital.Controllers
             npgSqlConnection.Close();
             return result;
         }
+                
+        [HttpPost("[action]")]
+        public void AddCabinet([FromQuery] int Cabinet)
+        {
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO cabinets VALUES (" +
+                Cabinet + ");", npgSqlConnection))
+            {
+                npgSqlCommand.ExecuteNonQuery();
+                npgSqlCommand.Dispose();
+            }
+            npgSqlConnection.Close();
+        }
+
+        [HttpDelete("[action]")]
+        public void DeleteCabinet([FromQuery] int Cabinet)
+        {
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("DELETE FROM appointment WHERE cabinet = " + Cabinet + ";" +
+                "DELETE FROM cabinets WHERE number = " + Cabinet + ";", npgSqlConnection))
+            {
+                npgSqlCommand.ExecuteNonQuery();
+                npgSqlCommand.Dispose();
+            }
+            npgSqlConnection.Close();
+        }
+
+        [HttpPost("[action]")]
+        public void AddRoom([FromQuery] int Number, int Places, int Doctor)
+        {
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO rooms VALUES (" + Number + ", " + Places + ", " + Doctor + ");", npgSqlConnection))
+            {
+                npgSqlCommand.ExecuteNonQuery();
+                npgSqlCommand.Dispose();
+            }
+            npgSqlConnection.Close();
+        }
+
+        [HttpDelete("[action]")]
+        public void DeleteRoom([FromQuery] int Number)
+        {
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("UPDATE patients SET departure = now(), room = null WHERE room = " + Number + "; " + 
+                "DELETE FROM rooms WHERE number = " + Number + ";", npgSqlConnection))
+            {
+                npgSqlCommand.ExecuteNonQuery();
+                npgSqlCommand.Dispose();
+            }
+            npgSqlConnection.Close();
+        }
+
+        [HttpPost("[action]")]
+        public void AddDisease([FromQuery] string Code, string Name, string Treat)
+        {
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO diseases VALUES('"+ Code + "', '"+ Name + "', '"+ Treat + "'); ", npgSqlConnection))
+            {
+                npgSqlCommand.ExecuteNonQuery();
+                npgSqlCommand.Dispose();
+            }
+            npgSqlConnection.Close();
+        }
+
+        [HttpPost("[action]")]
+        public void ChangeSalary([FromQuery] int Key, int Salary)
+        {
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("UPDATE positions SET salary = " + Salary + " WHERE key = " + Key + ";", npgSqlConnection))
+            {
+                npgSqlCommand.ExecuteNonQuery();
+                npgSqlCommand.Dispose();
+            }
+            npgSqlConnection.Close();
+        }
+
+        [HttpPost("[action]")]
+        public void AddPosition([FromQuery] string Name, int Salary)
+        {
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO positions (name, salary) VALUES ('"+ Name + "', "+ Salary + "); ", npgSqlConnection))
+            {
+                npgSqlCommand.ExecuteNonQuery();
+                npgSqlCommand.Dispose();
+            }
+            npgSqlConnection.Close();
+        }
+
+        [HttpPost("[action]")]
+        public void ChangePass([FromQuery] int ID, string Pass)
+        {
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("UPDATE authentication SET passwordhash = '"+Pass+"' WHERE id = "+ID+";", npgSqlConnection))
+            {
+                npgSqlCommand.ExecuteNonQuery();
+                npgSqlCommand.Dispose();
+            }
+            npgSqlConnection.Close();
+        }
+
+        [HttpPost("[action]")]
+        public void RegisterDoctor([FromQuery] string Name, [FromQuery]  int Phone, [FromQuery]  string Address, [FromQuery] string Birthday,
+            [FromQuery] string Start, [FromQuery] string End, [FromQuery] int Position, [FromQuery] int ID)
+        {
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO doctors (ID, Name, Phone, Address, BD, WorkStart, WorkEnd, Hired, PositionCode) VALUES (" 
+                + ID + ", '" + Name + "', " + Phone + ", '" + Address + "', '" + Birthday + "', '" + Start + "', '" + End + "', '" 
+                + DateTime.Today + "', " + Position + ");", npgSqlConnection))
+            {
+                npgSqlCommand.ExecuteNonQuery();
+                npgSqlCommand.Dispose();
+            }
+            
+            string login = Translit((Name.Split(' ')[0]).ToLower()) + ID.ToString();
+
+            int token = ID;
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO authentication (id, login, passwordhash) VALUES (" + 
+                + ID + ",'" + login + "','0000');", npgSqlConnection))
+            {
+                npgSqlCommand.ExecuteNonQuery();
+                npgSqlCommand.Dispose();
+            }
+            npgSqlConnection.Close();
+        }
+
+        public static string Translit(string str)
+        {
+            string[] lat_up = { "A", "B", "V", "G", "D", "E", "Yo", "Zh", "Z", "I", "Y", "K", "L", "M", "N", "O", "P", "R", "S", "T", "U", "F", "Kh", "Ts", "Ch", "Sh", "Shch", "\"", "Y", "'", "E", "Yu", "Ya" };
+            string[] lat_low = { "a", "b", "v", "g", "d", "e", "yo", "zh", "z", "i", "y", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u", "f", "kh", "ts", "ch", "sh", "shch", "\"", "y", "'", "e", "yu", "ya" };
+            string[] rus_up = { "А", "Б", "В", "Г", "Д", "Е", "Ё", "Ж", "З", "И", "Й", "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "У", "Ф", "Х", "Ц", "Ч", "Ш", "Щ", "Ъ", "Ы", "Ь", "Э", "Ю", "Я" };
+            string[] rus_low = { "а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "к", "л", "м", "н", "о", "п", "р", "с", "т", "у", "ф", "х", "ц", "ч", "ш", "щ", "ъ", "ы", "ь", "э", "ю", "я" };
+            for (int i = 0; i <= 32; i++)
+            {
+                str = str.Replace(rus_up[i], lat_up[i]);
+                str = str.Replace(rus_low[i], lat_low[i]);
+            }
+            return str;
+        }
+
+        [HttpDelete("[action]")]
+        public void DeleteDoctor([FromQuery] int ID)
+        {
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("DELETE FROM appointment WHERE doctor =" + ID + "; ", npgSqlConnection))
+            {
+                npgSqlCommand.ExecuteNonQuery();
+                npgSqlCommand.Dispose();
+            }
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("DELETE FROM authentication WHERE id =" + ID + "; ", npgSqlConnection))
+            {
+                npgSqlCommand.ExecuteNonQuery();
+                npgSqlCommand.Dispose();
+            }
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("DELETE FROM doctors WHERE id =" + ID + "; ", npgSqlConnection))
+            {
+                npgSqlCommand.ExecuteNonQuery();
+                npgSqlCommand.Dispose();
+            }
+            npgSqlConnection.Close();
+        }
 
         public class AdminDoctorView
         {

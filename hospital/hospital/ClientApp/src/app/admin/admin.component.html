@@ -1,12 +1,5 @@
 <h1>Привет, админ!</h1>
 <br />
-<p align="center">
-  <button type="button" class="btn btn-outline-success" style="margin-left:1rem" (click)="addDoctor()">Зарегистрировать врача</button>
-  <button type="button" class="btn btn-outline-success" style="margin-left:1rem" (click)="addDoctor()">Добавить кабинет</button>
-  <button type="button" class="btn btn-outline-success" style="margin-left:1rem" (click)="addDoctor()">Добавить палату</button>
-  <button type="button" class="btn btn-outline-success" style="margin-left:1rem" (click)="addDoctor()">Расширить МКБ</button>
-  <button type="button" class="btn btn-outline-success" style="margin-left:1rem" (click)="addDoctor()">Добавить должность</button>
-</p>
 <br />
 <h2>Докторы</h2>
 <p *ngIf="!doctors"><em>Loading...</em></p>
@@ -17,10 +10,8 @@
       <th>Телефон</th>
       <th>Адрес</th>
       <th>Дата рождения</th>
-      <th>Начало работы</th>
-      <th>Конец работы</th>
+      <th>Рабочий день</th>
       <th>Должность</th>
-      <th></th>
       <th></th>
     </tr>
   </thead>
@@ -30,16 +21,37 @@
       <td>{{ doctor.phone }}</td>
       <td>{{ doctor.address }}</td>
       <td>{{ doctor.bd | date}}</td>
-      <td>{{ doctor.workstart }}</td>
-      <td>{{ doctor.workend }}</td>
+      <td>{{ doctor.workstart }} - {{ doctor.workend }}</td>
       <td>{{ doctor.position }}</td>
-      <td><button type="button" class="btn btn-outline-secondary" (click)="change(doctor.ID)">Редактировать</button></td>
-      <td><button type="button" class="btn btn-outline-danger" (click)="remove(doctor.ID)">Удалить</button></td>
+      <td>
+        <button type="button" class="btn btn-outline-danger" style="width:7rem" (click)="deleteDoctor(doctor.doctorid)">Удалить</button>
+      </td>
+    </tr>
+
+    <tr>
+      <td><input type="text" style="width:15rem" [(ngModel)]="docName" /></td>
+      <td><input type="number" style="width:5rem" [(ngModel)]="docPhone" /></td>
+      <td><input type="text" style="width:7rem" [(ngModel)]="docAddress" /></td>
+      <td><input type="date" style="width:9rem" [(ngModel)]="docBD" /></td>
+      <td>
+        <input type="time" style="width:5rem" [(ngModel)]="docWorkStart" />
+        <input type="time" style="width:5rem" [(ngModel)]="docWorkEnd" />
+      </td>
+      <td>
+        <select #selectedPos style="width:6rem">
+          <option value=""></option>
+          <option *ngFor="let position of positions" value="{{ position.key }}">{{ position.name }} </option>
+        </select>
+      </td>
+      <td>
+        <button type="button" class="btn btn-outline-success" style="width:7rem " (click)="registerDoctor()">Регистрация</button>
+      </td>
     </tr>
   </tbody>
 </table>
 
-<h2>Пациенты</h2>
+<br />
+<h2>Пациенты TODO</h2>
 <p *ngIf="!patients"><em>Loading...</em></p>
 <table class='table table-striped' *ngIf="patients">
   <thead>
@@ -55,11 +67,12 @@
       <td>{{ patient.name }}</td>
       <td>{{ patient.passportserial }}</td>
       <td>{{ patient.passportnumber }}</td>
-      <td><button type="button" class="btn btn-outline-danger" (click)="remove(patient.patientid)">Удалить</button></td>
+      <td><button type="button" class="btn btn-outline-danger" (click)="deletePatient(patient.patientid)">Удалить</button></td>
     </tr>
   </tbody>
 </table>
 
+<br />
 <h2>Кабинеты</h2>
 <p *ngIf="!cabinets"><em>Loading...</em></p>
 <table class='table table-striped' *ngIf="cabinets">
@@ -72,11 +85,18 @@
   <tbody>
     <tr *ngFor="let cabinet of cabinets">
       <td>{{ cabinet.number }}</td>
-      <td><button type="button" class="btn btn-outline-danger" (click)="remove(cabinet.number)">Удалить</button></td>
+      <td><button type="button" class="btn btn-outline-danger" style="width:6rem" (click)="delCab(cabinet.number)">Удалить</button></td>
+    </tr>
+    <tr>
+      <td><input type="number" style="width:7rem" [(ngModel)]="cabinet" /></td>
+      <td>
+        <button type="button" class="btn btn-outline-success" style="width:6rem" (click)="addCab()">Добавить</button>
+      </td>
     </tr>
   </tbody>
 </table>
 
+<br />
 <h2>Палаты</h2>
 <p *ngIf="!rooms"><em>Loading...</em></p>
 <table class='table table-striped' *ngIf="rooms">
@@ -87,7 +107,6 @@
       <th>Места</th>
       <th>Свободно</th>
       <th></th>
-      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -96,12 +115,24 @@
       <td>{{ room.name }}</td>
       <td>{{ room.places }}</td>
       <td>{{ room.free }}</td>
-      <td><button type="button" class="btn btn-outline-secondary" (click)="remove(room.number)">Редактировать</button></td>
-      <td><button type="button" class="btn btn-outline-danger" (click)="remove(room.number)">Удалить</button></td>
+      <td><button type="button" class="btn btn-outline-danger" style="width:10rem" (click)="delRoom(room.number)">Удалить</button></td>
+    </tr>
+    <tr>
+      <td><input type="number" style="width:3rem" [(ngModel)]="roomNum" /></td>
+      <td>
+        <select #selecteddoc>
+          <option value=""></option>
+          <option *ngFor="let doctor of doctors" value="{{ doctor.doctorid }}">{{ doctor.name }} </option>
+        </select>
+      </td>
+      <td><input type="number" style="width:3rem; margin-left:-1rem;" [(ngModel)]="roomPlaces" /></td>
+      <td></td>
+      <td><button type="button" class="btn btn-outline-success" style="width:10rem" (click)="addRoom()">Добавить палату</button></td>
     </tr>
   </tbody>
 </table>
 
+<br />
 <h2>Международная классификация болезней</h2>
 <p *ngIf="!diseases"><em>Loading...</em></p>
 <table class='table table-striped' *ngIf="diseases">
@@ -118,9 +149,18 @@
       <td>{{ disease.name }}</td>
       <td>{{ disease.treatment }}</td>
     </tr>
+    <tr style="vertical-align:central">
+      <td><input type="text" style="width:6rem" [(ngModel)]="diseaseCode" /></td>
+      <td><input type="text" style="width:20rem" [(ngModel)]="diseaseName" /></td>
+      <td>
+        <input type="text" style="width:25rem" [(ngModel)]="diseaseTreat" />
+        <button type="button" class="btn btn-outline-success" style="margin-left:1rem" (click)="addDisease()">Дополнить</button>
+      </td>
+    </tr>
   </tbody>
 </table>
 
+<br />
 <h2>Должности</h2>
 <p *ngIf="!positions"><em>Loading...</em></p>
 <table class='table table-striped' *ngIf="positions">
@@ -129,8 +169,7 @@
       <th>Ключ</th>
       <th>Наименование</th>
       <th>Заработная плата</th>
-      <th></th>
-      <th></th>
+      <th>Изменить заработную плату</th>
     </tr>
   </thead>
   <tbody>
@@ -138,35 +177,46 @@
       <td>{{ position.key }}</td>
       <td>{{ position.name }}</td>
       <td>{{ position.salary }}</td>
-      <td><button type="button" class="btn btn-outline-secondary" (click)="change()">Редактировать</button></td>
-      <td><button type="button" class="btn btn-outline-danger" (click)="remove()">Удалить</button></td>
+      <td>
+        <input type="number" style="width:5rem" [(ngModel)]="position.newSalary" />
+        <button type="button" class="btn btn-outline-secondary" style="margin-left:2rem" (click)="changeSal(position.key, position.newSalary)">Установить</button>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><input type="text" style="width:15rem" [(ngModel)]="posName" /></td>
+      <td><input type="number" style="width:5rem" [(ngModel)]="posSalary" /></td>
+      <td><button type="button" class="btn btn-outline-success" style="width:12rem" (click)="addPosition()">Добавить должность</button></td>
     </tr>
   </tbody>
 </table>
 
+<br />
 <h2>Аутентификация</h2>
 <p *ngIf="!auths"><em>Loading...</em></p>
 <table class='table table-striped' *ngIf="auths">
   <thead>
     <tr>
+      <th>ID пользователя</th>
       <th>Логин</th>
       <th>Пароль (хэш)</th>
-      <th>Токен</th>
-      <th>ID пользователя</th>
       <th></th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let auth of auths">
+      <td>{{ auth.id }}</td>
       <td>{{ auth.login }}</td>
       <td>{{ auth.passwordhash }}</td>
-      <td>{{ auth.token }}</td>
-      <td>{{ auth.id }}</td>
-      <td><button type="button" class="btn btn-outline-secondary" (click)="remove(auth.id)">Редактировать</button></td>
+      <td>
+        <input type="text" style="width:5rem" [(ngModel)]="auth.newPassword" />
+        <button type="button" class="btn btn-outline-secondary" style="margin-left:2rem" (click)="changePass(auth.id, auth.newPassword)">Сменить пароль</button>
+      </td>
     </tr>
   </tbody>
 </table>
 
+<br />
 <h2>Аудит</h2>
 <p *ngIf="!audits"><em>Loading...</em></p>
 <table class='table table-striped' *ngIf="audits">
