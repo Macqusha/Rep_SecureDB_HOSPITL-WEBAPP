@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,6 +28,13 @@ namespace hospital
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options => //CookieAuthenticationOptions
+                {
+                    options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Login");
+                    options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Login");
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +54,8 @@ namespace hospital
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
@@ -67,6 +77,7 @@ namespace hospital
                     spa.UseProxyToSpaDevelopmentServer("http://localhost:4200/");
                 }
             });
+
         }
     }
 }

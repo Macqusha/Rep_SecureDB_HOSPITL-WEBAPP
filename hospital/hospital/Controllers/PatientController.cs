@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
 
@@ -18,6 +19,7 @@ namespace hospital.Controllers
             npgSqlConnection.Open();
         }
 
+        [Authorize(Roles = "Patient, Doctor")]
         [HttpGet("[action]")]
         public IEnumerable<PatientDiagnosisView> Diagnosis([FromQuery] string PatientID)
         {
@@ -48,6 +50,7 @@ namespace hospital.Controllers
             return result;
         }
 
+        [Authorize(Roles = "Patient")]
         [HttpGet("[action]")]
         public IEnumerable<PatientRoomView> Room([FromQuery] string PatientID)
         {
@@ -83,6 +86,7 @@ namespace hospital.Controllers
             return result;
         }
 
+        [Authorize(Roles = "Patient")]
         [HttpGet("[action]")]
         public IEnumerable<PatientAppointmentView> Appointment([FromQuery] string PatientID)
         {
@@ -115,6 +119,7 @@ namespace hospital.Controllers
             return result;
         }
 
+        [Authorize(Roles = "Patient")]
         [HttpGet("[action]")]
         public IEnumerable<PatientDoctorView> Doctor()
         {
@@ -148,6 +153,7 @@ namespace hospital.Controllers
             return result;
         }
 
+        [Authorize(Roles = "Patient, Doctor")]
         [HttpDelete("[action]")]
         public void DelAppointment([FromQuery] string key)
         {
@@ -160,6 +166,7 @@ namespace hospital.Controllers
             npgSqlConnection.Close();
         }
 
+        [Authorize(Roles = "Patient")]
         [HttpGet("[action]")]
         public IEnumerable<FreeDatesView> GetFreeDates([FromQuery] string DoctorID, string Start, string End)
         {
@@ -265,6 +272,7 @@ namespace hospital.Controllers
             return result;
         }
 
+        [Authorize(Roles = "Patient")]
         [HttpPost("[action]")]
         public void AddAppointment([FromQuery] string DoctorID, string PatientID, string Date, string Cabinet)
         {

@@ -13,6 +13,7 @@ export class MedRecordComponent implements OnInit {
   public diseases: MedRecordDiseaseView[];
   public rooms: MedRecordFreeRoomsView[];
   public curRoom: number | undefined = this.config.data.room;
+  currentUser: UserData;
 
   @ViewChild('selectedcode', { static: false })
   private selectedcode;
@@ -41,7 +42,7 @@ export class MedRecordComponent implements OnInit {
     this.http.post<MedRecordDiseaseView[]>(this.baseUrl + 'api/Doctor/RemoveRoom' + '?PatientID=' + this.config.data.patientID, {}).subscribe(result => {
       this.curRoom = undefined;
 
-      this.http.get<MedRecordFreeRoomsView[]>(this.baseUrl + 'api/Doctor/GetFreeRooms' + '?DoctorID=101').subscribe(result => {
+      this.http.get<MedRecordFreeRoomsView[]>(this.baseUrl + 'api/Doctor/GetFreeRooms' + '?DoctorID=' + this.currentUser.id).subscribe(result => {
         this.rooms = result;
       },
         error => console.error(error));
@@ -56,21 +57,23 @@ export class MedRecordComponent implements OnInit {
     @Inject('BASE_URL') private baseUrl: string,
     private config: DynamicDialogConfig,
   ) {
-
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
   }
   ngOnInit(): void {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
     this.http.get<MedicalRecordView[]>(
       this.baseUrl + 'api/Patient/Diagnosis' + '?PatientID=' + this.config.data.patientID).subscribe(result => {
         this.records = result;
       },
         error => console.error(error));
 
-    this.http.get<MedRecordDiseaseView[]>(this.baseUrl + 'api/Admin/Disease' + '?AdminID=1').subscribe(result => {
+    this.http.get<MedRecordDiseaseView[]>(this.baseUrl + 'api/Admin/Disease' + '?AdminID=' + this.currentUser.id).subscribe(result => {
       this.diseases = result;
     },
       error => console.error(error));
 
-    this.http.get<MedRecordFreeRoomsView[]>(this.baseUrl + 'api/Doctor/GetFreeRooms' + '?DoctorID=101').subscribe(result => {
+    this.http.get<MedRecordFreeRoomsView[]>(this.baseUrl + 'api/Doctor/GetFreeRooms' + '?DoctorID=' + this.currentUser.id).subscribe(result => {
       this.rooms = result;
     },
       error => console.error(error));
@@ -94,4 +97,10 @@ interface MedRecordFreeRoomsView {
   number: number;
   places: number;
   free: number;
+}
+
+interface UserData {
+  id: number | undefined;
+  name: string | undefined;
+  role: string | undefined;
 }

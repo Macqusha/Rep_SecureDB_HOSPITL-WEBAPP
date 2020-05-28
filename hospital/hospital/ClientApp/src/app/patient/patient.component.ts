@@ -14,6 +14,7 @@ export class PatientComponent {
   public rooms: PatientRoomView[];
   public appointments: PatientAppointmentView[];
   public doctors: PatientDoctorView[];
+  currentUser: UserData;
 
   makeAppointment(id, name, start, end) {
     const ref = this.dialogService.open(MakeAppointmentComponent, {
@@ -32,7 +33,7 @@ export class PatientComponent {
 
   cancelAppointment(key) {
     this.http.delete(this.baseUrl + 'api/Patient/DelAppointment' + '?Key=' + key).subscribe(result => {
-      this.http.get<PatientAppointmentView[]>(this.baseUrl + 'api/Patient/Appointment' + '?PatientID=1004').subscribe(result => {
+      this.http.get<PatientAppointmentView[]>(this.baseUrl + 'api/Patient/Appointment' + '?PatientID=' + this.currentUser.id).subscribe(result => {
         this.appointments = result;
       },
         error => console.error(error));
@@ -46,17 +47,19 @@ export class PatientComponent {
   }
 
   myLoadingFunction() {
-    this.http.get<PatientDiagnosisView[]>(this.baseUrl + 'api/Patient/Diagnosis' + '?PatientID=1004').subscribe(result => {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    this.http.get<PatientDiagnosisView[]>(this.baseUrl + 'api/Patient/Diagnosis' + '?PatientID=' + this.currentUser.id).subscribe(result => {
       this.diagnoses = result;
     },
       error => console.error(error));
 
-    this.http.get<PatientRoomView[]>(this.baseUrl + 'api/Patient/Room' + '?PatientID=1004').subscribe(result => {
+    this.http.get<PatientRoomView[]>(this.baseUrl + 'api/Patient/Room' + '?PatientID=' + this.currentUser.id).subscribe(result => {
       this.rooms = result;
     },
       error => console.error(error));
 
-    this.http.get<PatientAppointmentView[]>(this.baseUrl + 'api/Patient/Appointment' + '?PatientID=1004').subscribe(result => {
+    this.http.get<PatientAppointmentView[]>(this.baseUrl + 'api/Patient/Appointment' + '?PatientID=' + this.currentUser.id).subscribe(result => {
       this.appointments = result;
     },
       error => console.error(error));
@@ -98,4 +101,10 @@ interface PatientDoctorView {
   WorkStart: Time;
   WorkEnd: Time;
   Hired: Date;
+}
+
+interface UserData {
+  id: number | undefined;
+  name: string | undefined;
+  role: string | undefined;
 }

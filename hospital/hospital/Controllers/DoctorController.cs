@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
 
@@ -18,6 +19,7 @@ namespace hospital.Controllers
             npgSqlConnection.Open();
         }
 
+        [Authorize(Roles = "Doctor")]
         [HttpGet("[action]")]
         public IEnumerable<DoctorAppointmentView> Appointment([FromQuery] string DoctorID)
         {
@@ -81,6 +83,7 @@ namespace hospital.Controllers
             return rr;
         }
 
+        [Authorize(Roles = "Doctor")]
         [HttpGet("[action]")]
         public IEnumerable<DoctorPatientView> Patient([FromQuery] string DoctorID)
         {
@@ -118,6 +121,7 @@ namespace hospital.Controllers
             return result;
         }
 
+        [Authorize(Roles = "Doctor")]
         [HttpPost("[action]")]
         public void AddDisease([FromQuery] string PatientID, string Code)
         {
@@ -129,6 +133,7 @@ namespace hospital.Controllers
             npgSqlConnection.Close();
         }
 
+        [Authorize(Roles = "Doctor")]
         [HttpGet("[action]")]
         public IEnumerable<DoctorRoomView> GetFreeRooms([FromQuery] string DoctorID)
         {
@@ -160,6 +165,7 @@ namespace hospital.Controllers
             return result;
         }
 
+        [Authorize(Roles = "Doctor")]
         [HttpPost("[action]")]
         public void AddRoom([FromQuery] string PatientID, string Room)
         {
@@ -173,6 +179,7 @@ namespace hospital.Controllers
             npgSqlConnection.Close();
         }
 
+        [Authorize(Roles = "Doctor")]
         [HttpPost("[action]")]
         public void RemoveRoom([FromQuery] string PatientID)
         {

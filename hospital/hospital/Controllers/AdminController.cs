@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
 
@@ -18,6 +19,7 @@ namespace hospital.Controllers
             npgSqlConnection.Open();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("[action]")]
         public IEnumerable<AdminDoctorView> Doctor([FromQuery] string AdminID)
         {
@@ -52,6 +54,7 @@ namespace hospital.Controllers
             return result;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("[action]")]
         public IEnumerable<AdminPatientView> Patient([FromQuery] string AdminID)
         {
@@ -81,6 +84,7 @@ namespace hospital.Controllers
             return result;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("[action]")]
         public IEnumerable<AdminCabinetView> Cabinet([FromQuery] string AdminID)
         {
@@ -107,6 +111,7 @@ namespace hospital.Controllers
             return result;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("[action]")]
         public IEnumerable<AdminRoomView> Room([FromQuery] string AdminID)
         {
@@ -137,6 +142,7 @@ namespace hospital.Controllers
             return result;
         }
 
+        [Authorize(Roles = "Admin, Doctor")]
         [HttpGet("[action]")]
         public IEnumerable<AdminDiseaseView> Disease([FromQuery] string AdminID)
         {
@@ -165,6 +171,7 @@ namespace hospital.Controllers
             return result;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("[action]")]
         public IEnumerable<AdminPositionView> Position([FromQuery] string AdminID)
         {
@@ -193,6 +200,7 @@ namespace hospital.Controllers
             return result;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("[action]")]
         public IEnumerable<AdminAuthView> Auth([FromQuery] string AdminID)
         {
@@ -222,6 +230,7 @@ namespace hospital.Controllers
             return result;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("[action]")]
         public IEnumerable<AdminAuditView> Audit([FromQuery] string AdminID)
         {
@@ -251,6 +260,7 @@ namespace hospital.Controllers
             return result;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("[action]")]
         public void AddCabinet([FromQuery] int Cabinet)
         {
@@ -262,6 +272,7 @@ namespace hospital.Controllers
             npgSqlConnection.Close();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("[action]")]
         public void DeleteCabinet([FromQuery] int Cabinet)
         {
@@ -274,6 +285,7 @@ namespace hospital.Controllers
             npgSqlConnection.Close();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("[action]")]
         public void AddRoom([FromQuery] int Number, int Places, int Doctor)
         {
@@ -285,6 +297,7 @@ namespace hospital.Controllers
             npgSqlConnection.Close();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("[action]")]
         public void DeleteRoom([FromQuery] int Number)
         {
@@ -297,6 +310,7 @@ namespace hospital.Controllers
             npgSqlConnection.Close();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("[action]")]
         public void AddDisease([FromQuery] string Code, string Name, string Treat)
         {
@@ -308,6 +322,7 @@ namespace hospital.Controllers
             npgSqlConnection.Close();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("[action]")]
         public void ChangeSalary([FromQuery] int Key, int Salary)
         {
@@ -319,6 +334,7 @@ namespace hospital.Controllers
             npgSqlConnection.Close();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("[action]")]
         public void AddPosition([FromQuery] string Name, int Salary)
         {
@@ -330,6 +346,7 @@ namespace hospital.Controllers
             npgSqlConnection.Close();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("[action]")]
         public void ChangePass([FromQuery] int ID, string Pass)
         {
@@ -341,6 +358,7 @@ namespace hospital.Controllers
             npgSqlConnection.Close();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("[action]")]
         public void RegisterDoctor([FromQuery] string Name, [FromQuery]  int Phone, [FromQuery]  string Address, [FromQuery] string Birthday,
             [FromQuery] string Start, [FromQuery] string End, [FromQuery] int Position, [FromQuery] int ID)
@@ -377,6 +395,7 @@ namespace hospital.Controllers
             return str;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("[action]")]
         public void DeleteDoctor([FromQuery] int ID)
         {
@@ -398,6 +417,7 @@ namespace hospital.Controllers
             npgSqlConnection.Close();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("[action]")]
         public void DeletePatient([FromQuery] int ID)
         {

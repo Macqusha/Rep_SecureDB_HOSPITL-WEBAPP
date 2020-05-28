@@ -11,6 +11,7 @@ import { MedRecordComponent } from './medRecord/medRecord.component';
   providers: [DialogService]
 })
 export class DoctorComponent {
+  currentUser: UserData;
   public appointments: DoctorAppointmentView[];
   public patients: DoctorPatientView[];
 
@@ -30,7 +31,7 @@ export class DoctorComponent {
 
   cancelAppointment(key) {
     this.http.delete(this.baseUrl + 'api/Patient/DelAppointment' + '?Key=' + key).subscribe(result => {
-      this.http.get<DoctorAppointmentView[]>(this.baseUrl + 'api/Doctor/Appointment' + '?DoctorID=101').subscribe(result => {
+      this.http.get<DoctorAppointmentView[]>(this.baseUrl + 'api/Doctor/Appointment' + '?DoctorID=' + this.currentUser.id).subscribe(result => {
         this.appointments = result;
       },
         error => console.error(error));
@@ -45,12 +46,14 @@ export class DoctorComponent {
   }
 
   myLoadingFunction() {
-    this.http.get<DoctorAppointmentView[]>(this.baseUrl + 'api/Doctor/Appointment' + '?DoctorID=101').subscribe(result => {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    this.http.get<DoctorAppointmentView[]>(this.baseUrl + 'api/Doctor/Appointment' + '?DoctorID=' + this.currentUser.id).subscribe(result => {
       this.appointments = result;
     },
       error => console.error(error));
 
-    this.http.get<DoctorPatientView[]>(this.baseUrl + 'api/Doctor/Patient' + '?DoctorID=101').subscribe(result => {
+    this.http.get<DoctorPatientView[]>(this.baseUrl + 'api/Doctor/Patient' + '?DoctorID=' + this.currentUser.id).subscribe(result => {
       this.patients = result;
     },
       error => console.error(error));
@@ -81,4 +84,10 @@ interface DoctorPatientView {
   arrival: string;
   depature: string;
   patientid: number;
+}
+
+interface UserData {
+  id: number | undefined;
+  name: string | undefined;
+  role: string | undefined;
 }

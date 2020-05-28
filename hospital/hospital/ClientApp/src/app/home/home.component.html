@@ -1,15 +1,15 @@
-<div>
+<div *ngIf="!currentUser">
   <app-guest></app-guest>
 </div>
 
-<div>
+<div *ngIf="currentUser?.role === 'Patient'">
   <app-patient></app-patient>
 </div>
 
-<div>
+<div *ngIf="currentUser?.role === 'Doctor'">
   <app-doctor></app-doctor>
 </div>
 
-<div>
+<div *ngIf="currentUser?.role === 'Admin'">
   <app-admin></app-admin>
 </div>

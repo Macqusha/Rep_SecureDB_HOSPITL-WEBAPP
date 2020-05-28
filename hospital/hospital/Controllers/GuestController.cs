@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
 
@@ -18,10 +21,23 @@ namespace hospital.Controllers
             npgSqlConnection.Open();
         }
 
-        [HttpPost("[action]")]
-        public IEnumerable<AuthDataView> GetAuth([FromQuery] string Login, string Password)
+        private async Task Authenticate(UserData user)
         {
-            var result = new List<AuthDataView>();
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.name),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, user.role)
+            };
+            ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType,
+                ClaimsIdentity.DefaultRoleClaimType);
+            // Authentification cookies setup
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IEnumerable<UserData>> GetAuth([FromQuery] string Login, string Password)
+        {
+            var result = new List<UserData>();
             using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT authentication.id, doctors.name as doctor, " +
                 "patients.name AS patient, admins.name AS admin FROM authentication " +
                 "LEFT JOIN admins ON authentication.id = admins.id LEFT JOIN doctors ON authentication.id = doctors.id " +
@@ -34,10 +50,11 @@ namespace hospital.Controllers
                     {
                         foreach (DbDataRecord dbDataRecord in npgSqlDataReader)
                         {
-                            result.Add(new AuthDataView()
+                            result.Add(new UserData()
                             {
                                 id = Convert.ToInt32(dbDataRecord["id"]),
-                                name = choosename(dbDataRecord)
+                                name = choosename(dbDataRecord),
+                                role = chooserole(Convert.ToInt32(dbDataRecord["id"]))
                             });
                         }
                     }
@@ -46,12 +63,17 @@ namespace hospital.Controllers
                     {
                         if (result.Count == 0)
                         {
-                            result.Add(new AuthDataView()
+                            result.Add(new UserData()
                             {
                                 id = 0,
-                                name = "error"
+                                name = "error",
+                                role = "error"
                             });
                         }
+                    }
+                    else
+                    {
+                        await Authenticate(result[0]);
                     }
                     npgSqlDataReader.Close();
                 }
@@ -60,7 +82,7 @@ namespace hospital.Controllers
             npgSqlConnection.Close();
             return result;
         }
-
+        
         string choosename(DbDataRecord db)
         {
             int id = Convert.ToInt32(db["id"]);
@@ -68,6 +90,13 @@ namespace hospital.Controllers
             if (id >= 100 && id < 1000) return db["doctor"].ToString();
             if (id >= 1000) return db["patient"].ToString();
             return "error";
+        }
+        string chooserole(int id)
+        {
+            if (id >= 1 && id < 100) return "Admin";
+            if (id >= 100 && id < 1000) return "Doctor";
+            if (id >= 1000) return "Patient";
+            return "Guest";
         }
 
         [HttpPost("[action]")]
@@ -119,10 +148,11 @@ namespace hospital.Controllers
             }
         }
 
-        public class AuthDataView
+        public class UserData
         {
             public int id;
             public string name;
+            public string role;
         }
         public class stringres
         {

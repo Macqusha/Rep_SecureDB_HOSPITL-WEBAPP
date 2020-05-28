@@ -9,7 +9,7 @@
       <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" [ngClass]='{"show": isExpanded}'>
         <ul class="navbar-nav flex-grow">
           <li class="nav-item" [routerLinkActive]='["link-active"]'>
-            <a class="nav-link text-white" [routerLink]='["/"]'>Войти</a>
+            <a *ngIf="currentUser" class="nav-link text-white" (click)="logout()">Выйти</a>
           </li>
         </ul>
       </div>

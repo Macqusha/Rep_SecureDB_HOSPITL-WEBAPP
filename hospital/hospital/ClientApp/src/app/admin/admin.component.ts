@@ -8,6 +8,7 @@ import { concat } from 'rxjs';
   templateUrl: './admin.component.html'
 })
 export class AdminComponent {
+  currentUser: UserData;
   public doctors: AdminDoctorView[];
   public patients: AdminPatientView[];
   public cabinets: AdminCabinetView[];
@@ -34,7 +35,7 @@ export class AdminComponent {
   addCab() {
     if (this.cabinet > 0 && this.cabinet <= 299 && !this.cabinets.find((v) => v.number === this.cabinet)) {
       this.http.post<[]>(this.baseUrl + 'api/Admin/AddCabinet' + '?Cabinet=' + this.cabinet, {}).subscribe(result => {
-        this.http.get<AdminCabinetView[]>(this.baseUrl + 'api/Admin/Cabinet' + '?AdminID=1').subscribe(result => {
+        this.http.get<AdminCabinetView[]>(this.baseUrl + 'api/Admin/Cabinet' + '?AdminID=' + this.currentUser.id).subscribe(result => {
           this.cabinets = result;
         },
           error => console.error(error));
@@ -51,7 +52,7 @@ export class AdminComponent {
 
   delCab(cabNum) {
     this.http.delete<[]>(this.baseUrl + 'api/Admin/DeleteCabinet' + '?Cabinet=' + cabNum, {}).subscribe(result => {
-      this.http.get<AdminCabinetView[]>(this.baseUrl + 'api/Admin/Cabinet' + '?AdminID=1').subscribe(result => {
+      this.http.get<AdminCabinetView[]>(this.baseUrl + 'api/Admin/Cabinet' + '?AdminID=' + this.currentUser.id).subscribe(result => {
         this.cabinets = result;
       },
         error => console.error(error));
@@ -67,7 +68,7 @@ export class AdminComponent {
       this.http.post<[]>(this.baseUrl + 'api/Admin/AddRoom' + '?Number=' + this.roomNum + '&Places=' + this.roomPlaces + '&Doctor=' +
         this.selecteddoc.nativeElement.value, {}).subscribe(result => {
 
-          this.http.get<AdminRoomView[]>(this.baseUrl + 'api/Admin/Room' + '?AdminID=1').subscribe(result => {
+          this.http.get<AdminRoomView[]>(this.baseUrl + 'api/Admin/Room' + '?AdminID=' + this.currentUser.id).subscribe(result => {
             this.rooms = result;
           },
             error => console.error(error));
@@ -87,7 +88,7 @@ export class AdminComponent {
 
   delRoom(roomNum) {
     this.http.delete<[]>(this.baseUrl + 'api/Admin/DeleteRoom' + '?Number=' + roomNum, {}).subscribe(result => {
-      this.http.get<AdminRoomView[]>(this.baseUrl + 'api/Admin/Room' + '?AdminID=1').subscribe(result => {
+      this.http.get<AdminRoomView[]>(this.baseUrl + 'api/Admin/Room' + '?AdminID=' + this.currentUser.id).subscribe(result => {
         this.rooms = result;
       },
         error => console.error(error));
@@ -101,7 +102,7 @@ export class AdminComponent {
       this.http.post<[]>(this.baseUrl + 'api/Admin/AddDisease' + '?Code=' + this.diseaseCode + "&Name=" + this.diseaseName
         + "&Treat=" + this.diseaseTreat, {}).subscribe(result => {
 
-          this.http.get<AdminDiseaseView[]>(this.baseUrl + 'api/Admin/Disease' + '?AdminID=1').subscribe(result => {
+          this.http.get<AdminDiseaseView[]>(this.baseUrl + 'api/Admin/Disease' + '?AdminID=' + this.currentUser.id).subscribe(result => {
             this.diseases = result;
           },
             error => console.error(error));
@@ -121,7 +122,7 @@ export class AdminComponent {
     if (salary > 0) {
       this.http.post<[]>(this.baseUrl + 'api/Admin/ChangeSalary' + '?Key=' + key + "&Salary=" + salary, {}).subscribe(result => {
 
-        this.http.get<AdminPositionView[]>(this.baseUrl + 'api/Admin/Position' + '?AdminID=1').subscribe(result => {
+        this.http.get<AdminPositionView[]>(this.baseUrl + 'api/Admin/Position' + '?AdminID=' + this.currentUser.id).subscribe(result => {
           this.positions = result;
         },
           error => console.error(error));
@@ -138,7 +139,7 @@ export class AdminComponent {
       && !this.positions.find((p) => p.name === this.posName)) {
       this.http.post<[]>(this.baseUrl + 'api/Admin/AddPosition' + '?Name=' + this.posName + "&Salary=" + this.posSalary, {}).subscribe(result => {
 
-        this.http.get<AdminPositionView[]>(this.baseUrl + 'api/Admin/Position' + '?AdminID=1').subscribe(result => {
+        this.http.get<AdminPositionView[]>(this.baseUrl + 'api/Admin/Position' + '?AdminID=' + this.currentUser.id).subscribe(result => {
           this.positions = result;
         },
           error => console.error(error));
@@ -157,7 +158,7 @@ export class AdminComponent {
     if (pass.length > 0) {
       this.http.post<[]>(this.baseUrl + 'api/Admin/ChangePass' + '?ID=' + id + "&Pass=" + pass, {}).subscribe(result => {
 
-        this.http.get<AdminAuthView[]>(this.baseUrl + 'api/Admin/Auth' + '?AdminID=1').subscribe(result => {
+        this.http.get<AdminAuthView[]>(this.baseUrl + 'api/Admin/Auth' + '?AdminID=' + this.currentUser.id).subscribe(result => {
           this.auths = result;
         },
           error => console.error(error));
@@ -187,13 +188,13 @@ export class AdminComponent {
 
           alert('Доктор зарегистрирован. Не забудьте сменить ему пароль.');
 
-          this.http.get<AdminDoctorView[]>(this.baseUrl + 'api/Admin/Doctor' + '?AdminID=1').subscribe(result => {
+          this.http.get<AdminDoctorView[]>(this.baseUrl + 'api/Admin/Doctor' + '?AdminID=' + this.currentUser.id).subscribe(result => {
             this.doctors = result;
           },
             error => console.error(error));
 
 
-          this.http.get<AdminAuthView[]>(this.baseUrl + 'api/Admin/Auth' + '?AdminID=1').subscribe(result => {
+          this.http.get<AdminAuthView[]>(this.baseUrl + 'api/Admin/Auth' + '?AdminID=' + this.currentUser.id).subscribe(result => {
             this.auths = result;
           },
             error => console.error(error));
@@ -215,7 +216,7 @@ export class AdminComponent {
 
         alert('Доктор удален. Отменены его приемы, выписаны пациенты и удалены палаты номер ' + tt);
 
-        this.http.get<AdminDoctorView[]>(this.baseUrl + 'api/Admin/Doctor' + '?AdminID=1').subscribe(result => {
+        this.http.get<AdminDoctorView[]>(this.baseUrl + 'api/Admin/Doctor' + '?AdminID=' + this.currentUser.id).subscribe(result => {
           this.doctors = result;
         },
           error => console.error(error));
@@ -234,7 +235,7 @@ export class AdminComponent {
 
         alert('Пациент выписан и удален. Медицинская карта удалена, приемы отменены.');
 
-        this.http.get<AdminPatientView[]>(this.baseUrl + 'api/Admin/Patient' + '?AdminID=1').subscribe(result => {
+        this.http.get<AdminPatientView[]>(this.baseUrl + 'api/Admin/Patient' + '?AdminID=' + this.currentUser.id).subscribe(result => {
           this.patients = result;
         },
           error => console.error(error));
@@ -248,42 +249,44 @@ export class AdminComponent {
   }
 
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) {
-    http.get<AdminDoctorView[]>(baseUrl + 'api/Admin/Doctor' + '?AdminID=1').subscribe(result => {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    http.get<AdminDoctorView[]>(baseUrl + 'api/Admin/Doctor' + '?AdminID=' + this.currentUser.id).subscribe(result => {
       this.doctors = result;
     },
       error => console.error(error));
 
-    http.get<AdminPatientView[]>(baseUrl + 'api/Admin/Patient' + '?AdminID=1').subscribe(result => {
+    http.get<AdminPatientView[]>(baseUrl + 'api/Admin/Patient' + '?AdminID=' + this.currentUser.id).subscribe(result => {
       this.patients = result;
     },
       error => console.error(error));
 
-    http.get<AdminCabinetView[]>(baseUrl + 'api/Admin/Cabinet' + '?AdminID=1').subscribe(result => {
+    http.get<AdminCabinetView[]>(baseUrl + 'api/Admin/Cabinet' + '?AdminID=' + this.currentUser.id).subscribe(result => {
       this.cabinets = result;
     },
       error => console.error(error));
 
-    http.get<AdminRoomView[]>(baseUrl + 'api/Admin/Room' + '?AdminID=1').subscribe(result => {
+    http.get<AdminRoomView[]>(baseUrl + 'api/Admin/Room' + '?AdminID=' + this.currentUser.id).subscribe(result => {
       this.rooms = result;
     },
       error => console.error(error));
 
-    http.get<AdminDiseaseView[]>(baseUrl + 'api/Admin/Disease' + '?AdminID=1').subscribe(result => {
+    http.get<AdminDiseaseView[]>(baseUrl + 'api/Admin/Disease' + '?AdminID=' + this.currentUser.id).subscribe(result => {
       this.diseases = result;
     },
       error => console.error(error));
 
-    http.get<AdminPositionView[]>(baseUrl + 'api/Admin/Position' + '?AdminID=1').subscribe(result => {
+    http.get<AdminPositionView[]>(baseUrl + 'api/Admin/Position' + '?AdminID=' + this.currentUser.id).subscribe(result => {
       this.positions = result;
     },
       error => console.error(error));
 
-    http.get<AdminAuthView[]>(baseUrl + 'api/Admin/Auth' + '?AdminID=1').subscribe(result => {
+    http.get<AdminAuthView[]>(baseUrl + 'api/Admin/Auth' + '?AdminID=' + this.currentUser.id).subscribe(result => {
       this.auths = result;
     },
       error => console.error(error));
 
-    http.get<AdminAuditView[]>(baseUrl + 'api/Admin/Audit' + '?AdminID=1').subscribe(result => {
+    http.get<AdminAuditView[]>(baseUrl + 'api/Admin/Audit' + '?AdminID=' + this.currentUser.id).subscribe(result => {
       this.audits = result;
     },
       error => console.error(error));
@@ -345,4 +348,10 @@ interface AdminAuditView {
   login: string;
   action: string;
   acttime: Date;
+}
+
+interface UserData {
+  id: number | undefined;
+  name: string | undefined;
+  role: string | undefined;
 }
