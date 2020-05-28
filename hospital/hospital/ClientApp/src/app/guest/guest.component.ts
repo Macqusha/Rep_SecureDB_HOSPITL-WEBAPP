@@ -8,10 +8,11 @@ import { concat } from 'rxjs';
   templateUrl: './guest.component.html'
 })
 export class GuestComponent {
+  auths: AuthDataView[];
+  //Поля входа
   login: string | undefined;
   password: string | undefined;
-  id: number | undefined;
-
+  //Поля регистрации
   rPass: string | undefined;
   rName: string | undefined;
   rBd: string | undefined;
@@ -21,10 +22,18 @@ export class GuestComponent {
   rLogin: string;
 
   getAuth() {
-    this.http.post<number>(this.baseUrl + 'api/Guest/GetAuth' + '?Login=' + this.login + '&Password=' + this.password, {}).subscribe(result => {
-      this.id = result;
+    this.http.post<[AuthDataView]>(this.baseUrl + 'api/Guest/GetAuth' + '?Login=' + this.login + '&Password=' + this.password, {}).subscribe(result => {
+      this.auths = result;
+
+      if (this.auths[0].id > 0) {
+        alert('Добро пожаловать, ' + this.auths[0].name + '! Ваш ID ' + this.auths[0].id);
+      }
+      else {
+        alert('Ошибка авторизации. Неверный логин или пароль.')
+      }
+
     },
-      error => console.error(error));
+      error => { console.error(error) });
   }
 
   getReg() {
@@ -50,4 +59,8 @@ export class GuestComponent {
 
 export interface stringresult {
   login: string;
+}
+interface AuthDataView {
+  id: number | undefined;
+  name: string | undefined;
 }

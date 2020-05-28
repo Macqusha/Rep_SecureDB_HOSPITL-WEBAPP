@@ -19,11 +19,55 @@ namespace hospital.Controllers
         }
 
         [HttpPost("[action]")]
-        public int GetAuth([FromQuery] string Login, string Password)
+        public IEnumerable<AuthDataView> GetAuth([FromQuery] string Login, string Password)
         {
-
+            var result = new List<AuthDataView>();
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT authentication.id, doctors.name as doctor, " +
+                "patients.name AS patient, admins.name AS admin FROM authentication " +
+                "LEFT JOIN admins ON authentication.id = admins.id LEFT JOIN doctors ON authentication.id = doctors.id " +
+                "LEFT JOIN patients ON authentication.id = patients.id " +
+                "WHERE login = '" + Login + "' AND passwordhash = '" + Password + "';", npgSqlConnection))
+            {
+                using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
+                {
+                    if (npgSqlDataReader.HasRows)
+                    {
+                        foreach (DbDataRecord dbDataRecord in npgSqlDataReader)
+                        {
+                            result.Add(new AuthDataView()
+                            {
+                                id = Convert.ToInt32(dbDataRecord["id"]),
+                                name = choosename(dbDataRecord)
+                            });
+                        }
+                    }
+                    
+                    if (result.Count != 1 || result[0].name == "error" || result[0].id < 1)
+                    {
+                        if (result.Count == 0)
+                        {
+                            result.Add(new AuthDataView()
+                            {
+                                id = 0,
+                                name = "error"
+                            });
+                        }
+                    }
+                    npgSqlDataReader.Close();
+                }
+                npgSqlCommand.Dispose();
+            }
             npgSqlConnection.Close();
-            return 1;
+            return result;
+        }
+
+        string choosename(DbDataRecord db)
+        {
+            int id = Convert.ToInt32(db["id"]);
+            if (id >= 1 && id < 100) return db["admin"].ToString();
+            if (id >= 100 && id < 1000) return db["doctor"].ToString();
+            if (id >= 1000) return db["patient"].ToString();
+            return "error";
         }
 
         [HttpPost("[action]")]
@@ -77,11 +121,9 @@ namespace hospital.Controllers
 
         public class AuthDataView
         {
-            public string login;
-            public string password;
             public int id;
+            public string name;
         }
-
         public class stringres
         {
             public string login { get; set; }
