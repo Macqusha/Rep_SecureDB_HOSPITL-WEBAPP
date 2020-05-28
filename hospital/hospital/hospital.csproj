@@ -22,18 +22,14 @@
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Compile Remove="ClientApp\src\app\counter\**" />
     <Compile Remove="ClientApp\src\app\fetch-data\**" />
-    <Compile Remove="ClientApp\src\app\guest\**" />
     <Content Remove="$(SpaRoot)**" />
     <Content Remove="ClientApp\src\app\counter\**" />
     <Content Remove="ClientApp\src\app\fetch-data\**" />
-    <Content Remove="ClientApp\src\app\guest\**" />
     <EmbeddedResource Remove="ClientApp\src\app\counter\**" />
     <EmbeddedResource Remove="ClientApp\src\app\fetch-data\**" />
-    <EmbeddedResource Remove="ClientApp\src\app\guest\**" />
     <None Remove="$(SpaRoot)**" />
     <None Remove="ClientApp\src\app\counter\**" />
     <None Remove="ClientApp\src\app\fetch-data\**" />
-    <None Remove="ClientApp\src\app\guest\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
 
@@ -44,11 +40,13 @@
     <None Remove="ClientApp\src\app\doctor\medRecord\medRecord.component.ts" />
     <None Remove="ClientApp\src\app\fetch-data\fetch-data.component.html" />
     <None Remove="ClientApp\src\app\fetch-data\fetch-data.component.ts" />
+    <None Remove="ClientApp\src\app\guest\guest.component.ts" />
     <None Remove="ClientApp\src\app\patient\makeAppointment\makeAppointment.component.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\app\doctor\medRecord\medRecord.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\guest\guest.component.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\patient\makeAppointment\makeAppointment.component.ts" />
   </ItemGroup>
 

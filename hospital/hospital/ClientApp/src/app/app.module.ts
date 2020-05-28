@@ -12,6 +12,7 @@ import { DoctorComponent } from './doctor/doctor.component';
 import { MedRecordComponent } from './doctor/medRecord/medRecord.component';
 import { MakeAppointmentComponent } from './patient/makeAppointment/makeAppointment.component';
 import { AdminComponent } from './admin/admin.component';
+import { GuestComponent } from './guest/guest.component';
 import { DialogModule } from 'primeng/dialog';
 import { DynamicDialogModule } from 'primeng/dynamicdialog'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -25,6 +26,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     PatientComponent,
     DoctorComponent,
     AdminComponent,
+    GuestComponent,
     MedRecordComponent,
     MakeAppointmentComponent
   ],
@@ -40,6 +42,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
       { path: 'patient', component: PatientComponent },
       { path: 'doctor', component: DoctorComponent },
       { path: 'admin', component: AdminComponent },
+      { path: 'guest', component: GuestComponent },
     ])
   ],
   providers: [],
