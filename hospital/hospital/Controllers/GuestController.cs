@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -38,6 +40,8 @@ namespace hospital.Controllers
         [HttpPost("[action]")]
         public async Task<IEnumerable<UserData>> GetAuth([FromQuery] string Login, string Password)
         {
+            SHA256 mySHA256 = SHA256.Create();
+            Password = Encoding.Unicode.GetString(mySHA256.ComputeHash(Encoding.Unicode.GetBytes(Password)));
             var result = new List<UserData>();
             Login = Regex.Replace(Login.ToLower(), "[^a-z0-9]", "");
             using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT authentication.id, doctors.name as doctor, " +
@@ -139,6 +143,8 @@ namespace hospital.Controllers
 
             if (ID >= 1000)
             {
+                SHA256 mySHA256 = SHA256.Create();
+                Password = Encoding.Unicode.GetString(mySHA256.ComputeHash(Encoding.Unicode.GetBytes(Password)));
                 string Login = AdminController.Translit((Name.Split(' ')[0]).ToLower()) + ID.ToString();
                 using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO authentication (id, login, passwordhash) VALUES (" +
                     +ID + ",'" + Login + "','" + Password + "');", npgSqlConnection))
@@ -146,16 +152,16 @@ namespace hospital.Controllers
                     npgSqlCommand.ExecuteNonQuery();
                     npgSqlCommand.Dispose();
                 }
-                npgSqlConnection.Close();
 
                 //Audit
                 using (NpgsqlCommand npgSqlCommand1 = new NpgsqlCommand("INSERT INTO audit (login,action,acttime) VALUES " +
-                    "'" + Login + "','Регистрация', now())", npgSqlConnection))
+                    "('" + Login + "','Регистрация', now())", npgSqlConnection))
                 {
                     npgSqlCommand1.ExecuteNonQuery();
                     npgSqlCommand1.Dispose();
                 }
 
+                npgSqlConnection.Close();
                 return new stringres() { login = Login };
             }
             else

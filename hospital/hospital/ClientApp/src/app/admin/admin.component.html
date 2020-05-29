@@ -199,7 +199,6 @@
     <tr>
       <th>ID пользователя</th>
       <th>Логин</th>
-      <th>Пароль (хэш)</th>
       <th></th>
     </tr>
   </thead>
@@ -207,7 +206,6 @@
     <tr *ngFor="let auth of auths">
       <td>{{ auth.id }}</td>
       <td>{{ auth.login }}</td>
-      <td>{{ auth.passwordhash }}</td>
       <td>
         <input type="text" style="width:5rem" [(ngModel)]="auth.newPassword" />
         <button type="button" class="btn btn-outline-secondary" style="margin-left:2rem" (click)="changePass(auth.id, auth.newPassword)">Сменить пароль</button>

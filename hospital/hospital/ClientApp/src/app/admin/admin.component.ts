@@ -376,7 +376,6 @@ interface AdminPositionView {
 
 interface AdminAuthView {
   login: string;
-  passwordhash: string;
   id: number;
   newPassword: string;
 }

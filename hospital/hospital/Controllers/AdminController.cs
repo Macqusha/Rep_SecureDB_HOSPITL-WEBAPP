@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -216,7 +218,6 @@ namespace hospital.Controllers
                             result.Add(new AdminAuthView()
                             {
                                 login = dbDataRecord["login"].ToString(),
-                                passwordhash = dbDataRecord["passwordhash"].ToString(),
                                 token = dbDataRecord["token"].ToString(),
                                 id = Convert.ToInt32(dbDataRecord["id"])
                             });
@@ -350,6 +351,8 @@ namespace hospital.Controllers
         [HttpPost("[action]")]
         public void ChangePass([FromQuery] int ID, string Pass)
         {
+            SHA256 mySHA256 = SHA256.Create();
+            Pass = Encoding.Unicode.GetString(mySHA256.ComputeHash(Encoding.Unicode.GetBytes(Pass)));
             using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("UPDATE authentication SET passwordhash = '" + Pass + "' WHERE id = " + ID + ";", npgSqlConnection))
             {
                 npgSqlCommand.ExecuteNonQuery();
@@ -371,9 +374,11 @@ namespace hospital.Controllers
                 npgSqlCommand.Dispose();
             }
 
+            SHA256 mySHA256 = SHA256.Create();
+            string Password = Encoding.Unicode.GetString(mySHA256.ComputeHash(Encoding.Unicode.GetBytes("0000")));
             string login = Translit((Name.Split(' ')[0]).ToLower()) + ID.ToString();
             using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO authentication (id, login, passwordhash) VALUES (" +
-                +ID + ",'" + login + "','0000');", npgSqlConnection))
+                +ID + ",'" + login + "','" + Password + "');", npgSqlConnection))
             {
                 npgSqlCommand.ExecuteNonQuery();
                 npgSqlCommand.Dispose();
@@ -490,7 +495,6 @@ namespace hospital.Controllers
         public class AdminAuthView
         {
             public string login { get; set; }
-            public string passwordhash { get; set; }
             public string token { get; set; }
             public int id { get; set; }
         }
