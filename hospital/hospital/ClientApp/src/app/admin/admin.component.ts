@@ -203,7 +203,45 @@ export class AdminComponent {
           error => console.error(error));
     }
     else {
-      alert('Некорректные данные. Доктор не зарегистрирован.');
+      if (maxID > 999) {
+        var i = 0;
+        while (i < 1000)
+        {
+          var tt = this.doctors.find((v) => (v.doctorid == i));
+          if (tt == undefined) break;
+          i++;
+        }
+
+        if (i < 1000 && tt == undefined) {
+          this.http.post<[]>(this.baseUrl + 'api/Admin/RegisterDoctor' + '?Name=' + this.docName + "&Phone=" + this.docPhone
+            + "&Position=" + this.selectedPos.nativeElement.value + "&ID=" + i + "&Address=" + this.docAddress
+            + "&Birthday=" + this.docBD + "&Start=" + this.docWorkStart + "&End=" + this.docWorkEnd, {}).subscribe(result => {
+
+              alert('Доктор зарегистрирован. Не забудьте сменить ему пароль.');
+
+              this.http.get<AdminDoctorView[]>(this.baseUrl + 'api/Admin/Doctor' + '?AdminID=' + this.currentUser.id).subscribe(result => {
+                this.doctors = result;
+              },
+                error => console.error(error));
+
+
+              this.http.get<AdminAuthView[]>(this.baseUrl + 'api/Admin/Auth' + '?AdminID=' + this.currentUser.id).subscribe(result => {
+                this.auths = result;
+              },
+                error => console.error(error));
+
+            },
+              error => console.error(error));
+        }
+        else {
+          alert('Нет ни одного слота для регистрации врачей. Пожалуйста, удалите уволенных сотрудников.');
+        }
+      }
+      else
+      {
+        alert('Некорректные данные. Доктор не зарегистрирован.');
+      }
+
     }
   }
 
