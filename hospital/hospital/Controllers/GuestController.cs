@@ -60,26 +60,33 @@ namespace hospital.Controllers
                             });
                         }
                     }
-                    
-                    if (result.Count != 1 || result[0].name == "error" || result[0].id < 1)
-                    {
-                        if (result.Count == 0)
-                        {
-                            result.Add(new UserData()
-                            {
-                                id = 0,
-                                name = "error",
-                                role = "error"
-                            });
-                        }
-                    }
-                    else
-                    {
-                        await Authenticate(result[0]);
-                    }
                     npgSqlDataReader.Close();
                 }
                 npgSqlCommand.Dispose();
+
+                if (result.Count != 1 || result[0].name == "error" || result[0].id < 1)
+                {
+                    if (result.Count == 0)
+                    {
+                        result.Add(new UserData()
+                        {
+                            id = 0,
+                            name = "error",
+                            role = "error"
+                        });
+                    }
+                }
+                else
+                {
+                    await Authenticate(result[0]);
+                    //Audit
+                    using (NpgsqlCommand npgSqlCommand1 = new NpgsqlCommand("INSERT INTO audit (login,action,acttime) VALUES " +
+                        "((SELECT login FROM authentication WHERE id = " + result[0].id + "),'Вход в систему', now())", npgSqlConnection))
+                    {
+                        npgSqlCommand1.ExecuteNonQuery();
+                        npgSqlCommand1.Dispose();
+                    }
+                }
             }
             npgSqlConnection.Close();
             return result;
@@ -141,12 +148,32 @@ namespace hospital.Controllers
                 }
                 npgSqlConnection.Close();
 
+                //Audit
+                using (NpgsqlCommand npgSqlCommand1 = new NpgsqlCommand("INSERT INTO audit (login,action,acttime) VALUES " +
+                    "'" + Login + "','Регистрация', now())", npgSqlConnection))
+                {
+                    npgSqlCommand1.ExecuteNonQuery();
+                    npgSqlCommand1.Dispose();
+                }
+
                 return new stringres() { login = Login };
             }
             else
             {
                 npgSqlConnection.Close();
                 return "error";
+            }
+        }
+
+        [HttpPost("[action]")]
+        public void LogoutAudit([FromQuery] int ID)
+        {
+            //Audit
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO audit (login,action,acttime) VALUES " +
+                "((SELECT login FROM authentication WHERE id = " + ID + "),'Выход из системы', now())", npgSqlConnection))
+            {
+                npgSqlCommand.ExecuteNonQuery();
+                npgSqlCommand.Dispose();
             }
         }
 

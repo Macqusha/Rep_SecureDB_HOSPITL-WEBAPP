@@ -248,7 +248,7 @@ namespace hospital.Controllers
                                 id = Convert.ToInt32(dbDataRecord["id"]),
                                 login = dbDataRecord["login"].ToString(),
                                 action = dbDataRecord["action"].ToString(),
-                                acttime = DateTime.Parse(dbDataRecord["acttime"].ToString())
+                                acttime = dbDataRecord["acttime"].ToString()
                             });
                         }
                     }
@@ -499,7 +499,7 @@ namespace hospital.Controllers
             public int id { get; set; }
             public string login { get; set; }
             public string action { get; set; }
-            public DateTime acttime { get; set; }
+            public string acttime { get; set; }
         }
     }
 }

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-nav-menu',
@@ -9,7 +10,7 @@ export class NavMenuComponent {
   currentUser: user;
   isExpanded = false;
 
-  constructor() {
+  constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
   }
 
@@ -22,9 +23,14 @@ export class NavMenuComponent {
   }
 
   logout() {
+    var tmpUser = JSON.parse(localStorage.getItem('currentUser'));
     localStorage.removeItem('currentUser');
     window.location.reload();
+    this.http.post<null>(this.baseUrl + 'api/Guest/LogoutAudit' + '?ID=' + tmpUser.id, {}).subscribe(result => {
+    },
+      error => { console.error(error) });
   }
+
 }
 
 interface user {

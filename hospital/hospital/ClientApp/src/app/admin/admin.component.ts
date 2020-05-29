@@ -347,7 +347,7 @@ interface AdminAuditView {
   id: number;
   login: string;
   action: string;
-  acttime: Date;
+  acttime: string;
 }
 
 interface UserData {
