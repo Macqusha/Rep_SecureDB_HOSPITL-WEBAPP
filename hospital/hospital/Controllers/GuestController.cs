@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -38,6 +39,7 @@ namespace hospital.Controllers
         public async Task<IEnumerable<UserData>> GetAuth([FromQuery] string Login, string Password)
         {
             var result = new List<UserData>();
+            Login = Regex.Replace(Login.ToLower(), "[^a-z0-9]", "");
             using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT authentication.id, doctors.name as doctor, " +
                 "patients.name AS patient, admins.name AS admin FROM authentication " +
                 "LEFT JOIN admins ON authentication.id = admins.id LEFT JOIN doctors ON authentication.id = doctors.id " +
