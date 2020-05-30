@@ -1,6 +1,5 @@
 <h1>Здравствуйте, {{ currentUser.name }}!</h1>
 <br />
-<br />
 <h2>Медкарта</h2>
 <p *ngIf="!diagnoses"><em>Loading...</em></p>
 <table class='table table-striped' *ngIf="diagnoses">
@@ -18,6 +17,7 @@
   </tbody>
 </table>
 
+<br />
 <h2>Палата</h2>
 <p *ngIf="!rooms"><em>Loading...</em></p>
 <table class='table table-striped' *ngIf="rooms">
@@ -43,6 +43,7 @@
   </tbody>
 </table>
 
+<br />
 <h2>Приемы</h2>
 <p *ngIf="!appointments"><em>Loading...</em></p>
 <table class='table table-striped' *ngIf="appointments">
@@ -64,6 +65,7 @@
   </tbody>
 </table>
 
+<br />
 <h2>Запись на прием</h2>
 <p *ngIf="!doctors"><em>Loading...</em></p>
 <table class='table table-striped' *ngIf="doctors">
