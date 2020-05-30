@@ -113,11 +113,11 @@ namespace hospital.Controllers
         }
 
         [HttpPost("[action]")]
-        public Object GetReg([FromQuery] string Name, [FromQuery] string Bd, [FromQuery]  int PasSerial, [FromQuery]  int PasNum, [FromQuery]  int Phone,
+        public Object GetReg([FromQuery] string Name, [FromQuery] string Bd, [FromQuery]  string PasSerial, [FromQuery]  string PasNum, [FromQuery]  int Phone,
              [FromQuery] string Password)
         {
             using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO patients (Name, BD, PassportSerial, PassportNumber, Phone) VALUES ('"
-                + Name + "', '" + Bd + "', " + PasSerial + ", " + PasNum + ", " + Phone + ");", npgSqlConnection))
+                + Name + "', '" + Bd + "', '" + Crypto.Encrypt(PasSerial.ToString()) + "', '" + Crypto.Encrypt(PasNum) + "', " + Phone + ");", npgSqlConnection))
             {
                 npgSqlCommand.ExecuteNonQuery();
                 npgSqlCommand.Dispose();
@@ -125,7 +125,7 @@ namespace hospital.Controllers
 
             int ID = 0;
             using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT id FROM patients WHERE name = '" + Name + "' AND passportserial = " +
-                PasSerial + " AND passportnumber = " + PasNum + ";", npgSqlConnection))
+                "'" + Crypto.Encrypt(PasSerial.ToString()) + "' AND passportnumber = '" + Crypto.Encrypt(PasNum.ToString()) + "';", npgSqlConnection))
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
                 {

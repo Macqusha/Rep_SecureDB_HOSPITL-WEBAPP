@@ -69,12 +69,16 @@ namespace hospital.Controllers
                     {
                         foreach (DbDataRecord dbDataRecord in npgSqlDataReader)
                         {
+                            //var tt = dbDataRecord["passportserial"];
+                            //var tt1 = tt.ToString();
+                            //var tt2 = Crypto.Decrypt(tt1);
+                            //var tt3 = Convert.ToInt32(tt2);
                             result.Add(new AdminPatientView()
                             {
                                 patientid = Convert.ToInt32(dbDataRecord["patientid"]),
                                 name = dbDataRecord["name"].ToString(),
-                                passportserial = Convert.ToInt32(dbDataRecord["passportserial"]),
-                                passportnumber = Convert.ToInt32(dbDataRecord["passportnumber"]),
+                                passportserial = Crypto.Decrypt(dbDataRecord["passportserial"].ToString()),
+                                passportnumber = Crypto.Decrypt(dbDataRecord["passportnumber"].ToString())
                             });
                         }
                     }
@@ -218,7 +222,6 @@ namespace hospital.Controllers
                             result.Add(new AdminAuthView()
                             {
                                 login = dbDataRecord["login"].ToString(),
-                                token = dbDataRecord["token"].ToString(),
                                 id = Convert.ToInt32(dbDataRecord["id"])
                             });
                         }
@@ -388,8 +391,8 @@ namespace hospital.Controllers
 
         public static string Translit(string str)
         {
-            string[] lat_up = { "A", "B", "V", "G", "D", "E", "Yo", "Zh", "Z", "I", "Y", "K", "L", "M", "N", "O", "P", "R", "S", "T", "U", "F", "Kh", "Ts", "Ch", "Sh", "Shch", "", "Y", "'", "E", "Yu", "Ya" };
-            string[] lat_low = { "a", "b", "v", "g", "d", "e", "yo", "zh", "z", "i", "y", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u", "f", "kh", "ts", "ch", "sh", "shch", "", "y", "'", "e", "yu", "ya" };
+            string[] lat_up = { "A", "B", "V", "G", "D", "E", "Yo", "Zh", "Z", "I", "Y", "K", "L", "M", "N", "O", "P", "R", "S", "T", "U", "F", "Kh", "Ts", "Ch", "Sh", "Shch", "", "Y", "", "E", "Yu", "Ya" };
+            string[] lat_low = { "a", "b", "v", "g", "d", "e", "yo", "zh", "z", "i", "y", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u", "f", "kh", "ts", "ch", "sh", "shch", "", "y", "", "e", "yu", "ya" };
             string[] rus_up = { "А", "Б", "В", "Г", "Д", "Е", "Ё", "Ж", "З", "И", "Й", "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "У", "Ф", "Х", "Ц", "Ч", "Ш", "Щ", "Ъ", "Ы", "Ь", "Э", "Ю", "Я" };
             string[] rus_low = { "а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "к", "л", "м", "н", "о", "п", "р", "с", "т", "у", "ф", "х", "ц", "ч", "ш", "щ", "ъ", "ы", "ь", "э", "ю", "я" };
             for (int i = 0; i <= 32; i++)
@@ -465,8 +468,8 @@ namespace hospital.Controllers
         {
             public int patientid { get; set; }
             public string name { get; set; }
-            public int passportserial { get; set; }
-            public int passportnumber { get; set; }
+            public string passportserial { get; set; }
+            public string passportnumber { get; set; }
         }
         public class AdminCabinetView
         {
@@ -495,7 +498,6 @@ namespace hospital.Controllers
         public class AdminAuthView
         {
             public string login { get; set; }
-            public string token { get; set; }
             public int id { get; set; }
         }
         public class AdminAuditView

@@ -345,8 +345,8 @@ interface AdminDoctorView {
 interface AdminPatientView {
   patientid: number;
   name: string
-  passportnumber: number;
-  passportserial: number;
+  passportnumber: string;
+  passportserial: string;
 }
 
 interface AdminCabinetView {

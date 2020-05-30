@@ -16,8 +16,8 @@ export class GuestComponent {
   rPass: string | undefined;
   rName: string | undefined;
   rBd: string | undefined;
-  rPasSerial: number | undefined;
-  rPasNum: number | undefined;
+  rPasSerial: string | undefined;
+  rPasNum: string | undefined;
   rPhone: number | undefined;
   rLogin: string;
 
