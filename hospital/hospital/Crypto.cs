@@ -12,8 +12,8 @@ namespace hospital
     public class Crypto
     {
         public static byte[] myKey = { 131, 240, 69, 92, 59, 137, 79, 67 };
-        public static byte[] myIV = { 60, 46,247,206,136,47,26,254 };
-        
+        public static byte[] myIV = { 60, 46, 247, 206, 136, 47, 26, 254 };
+
         public static string Encrypt(string original)
         {
             try
@@ -40,7 +40,7 @@ namespace hospital
             catch (Exception ae)
             {
                 throw new Exception(ae.Message, ae.InnerException);
-            }                       
+            }
         }
 
         public static string Decrypt(string ciphertext)
@@ -72,7 +72,6 @@ namespace hospital
             {
                 throw new Exception(ae.Message, ae.InnerException);
             }
-        }        
+        }
     }
 }
-    

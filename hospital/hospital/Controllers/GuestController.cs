@@ -95,7 +95,7 @@ namespace hospital.Controllers
             npgSqlConnection.Close();
             return result;
         }
-        
+
         string choosename(DbDataRecord db)
         {
             int id = Convert.ToInt32(db["id"]);
@@ -116,6 +116,7 @@ namespace hospital.Controllers
         public Object GetReg([FromQuery] string Name, [FromQuery] string Bd, [FromQuery]  string PasSerial, [FromQuery]  string PasNum, [FromQuery]  int Phone,
              [FromQuery] string Password)
         {
+            //TODO: date validation - 31 april check
             using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO patients (Name, BD, PassportSerial, PassportNumber, Phone) VALUES ('"
                 + Name + "', '" + Bd + "', '" + Crypto.Encrypt(PasSerial.ToString()) + "', '" + Crypto.Encrypt(PasNum) + "', " + Phone + ");", npgSqlConnection))
             {

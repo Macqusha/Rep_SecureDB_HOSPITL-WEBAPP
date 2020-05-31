@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
@@ -29,7 +28,6 @@ namespace hospital.Controllers
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
                 {
-
                     if (npgSqlDataReader.HasRows)
                     {
                         foreach (DbDataRecord dbDataRecord in npgSqlDataReader)
@@ -62,7 +60,6 @@ namespace hospital.Controllers
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
                 {
-
                     if (npgSqlDataReader.HasRows)
                     {
                         foreach (DbDataRecord dbDataRecord in npgSqlDataReader)
@@ -96,7 +93,6 @@ namespace hospital.Controllers
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
                 {
-
                     if (npgSqlDataReader.HasRows)
                     {
                         foreach (DbDataRecord dbDataRecord in npgSqlDataReader)
@@ -129,7 +125,6 @@ namespace hospital.Controllers
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
                 {
-
                     if (npgSqlDataReader.HasRows)
                     {
                         foreach (DbDataRecord dbDataRecord in npgSqlDataReader)
@@ -171,7 +166,6 @@ namespace hospital.Controllers
         public IEnumerable<FreeDatesView> GetFreeDates([FromQuery] string DoctorID, string Start, string End)
         {
             var result = new List<FreeDatesView>();
-
             var cabinets = new List<int>();
             using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT * FROM cabinets;", npgSqlConnection))
             {
@@ -278,7 +272,6 @@ namespace hospital.Controllers
         {
             if (Date != "" && Date != null)
             {
-                //Проверка
                 bool allCorrect = true;
                 using (NpgsqlCommand npgSqlCommand1 = new NpgsqlCommand("SELECT apptime, cabinet, doctor FROM appointment;", npgSqlConnection))
                 {

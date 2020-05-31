@@ -6,6 +6,7 @@
 <table class='table table-striped' *ngIf="doctors">
   <thead>
     <tr>
+      <th>ID</th>
       <th>Доктор</th>
       <th>Телефон</th>
       <th>Адрес</th>
@@ -17,6 +18,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let doctor of doctors">
+      <td>{{ doctor.doctorid }}</td>
       <td>{{ doctor.name }}</td>
       <td>{{ doctor.phone }}</td>
       <td>{{ doctor.address }}</td>
@@ -29,6 +31,7 @@
     </tr>
 
     <tr>
+      <td></td>
       <td><input type="text" style="width:15rem" [(ngModel)]="docName" /></td>
       <td><input type="number" style="width:5rem" [(ngModel)]="docPhone" /></td>
       <td><input type="text" style="width:7rem" [(ngModel)]="docAddress" /></td>
@@ -56,6 +59,7 @@
 <table class='table table-striped' *ngIf="patients">
   <thead>
     <tr>
+      <th>ID</th>
       <th>Пациент</th>
       <th>Серия</th>
       <th>Номер</th>
@@ -64,6 +68,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let patient of patients">
+      <td>{{ patient.patientid }}</td>
       <td>{{ patient.name }}</td>
       <td>{{ patient.passportserial }}</td>
       <td>{{ patient.passportnumber }}</td>

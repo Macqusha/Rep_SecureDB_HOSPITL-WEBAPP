@@ -139,7 +139,7 @@ namespace hospital.Controllers
         {
             var result = new List<DoctorRoomView>();
             using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("SELECT number, places, places - count(room) AS free FROM rooms " +
-                "LEFT JOIN patients ON number = room LEFT JOIN doctors on fixeddoctor = doctors.id WHERE doctors.id = " + 
+                "LEFT JOIN patients ON number = room LEFT JOIN doctors on fixeddoctor = doctors.id WHERE doctors.id = " +
                 DoctorID + " GROUP BY number,doctors.id;", npgSqlConnection))
             {
                 using (NpgsqlDataReader npgSqlDataReader = npgSqlCommand.ExecuteReader())
@@ -183,7 +183,7 @@ namespace hospital.Controllers
         [HttpPost("[action]")]
         public void RemoveRoom([FromQuery] string PatientID)
         {
-            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("UPDATE patients SET departure = now(), room = null WHERE id = " + 
+            using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("UPDATE patients SET departure = now(), room = null WHERE id = " +
                 PatientID + ";", npgSqlConnection))
             {
                 npgSqlCommand.ExecuteNonQuery();

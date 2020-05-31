@@ -69,10 +69,6 @@ namespace hospital.Controllers
                     {
                         foreach (DbDataRecord dbDataRecord in npgSqlDataReader)
                         {
-                            //var tt = dbDataRecord["passportserial"];
-                            //var tt1 = tt.ToString();
-                            //var tt2 = Crypto.Decrypt(tt1);
-                            //var tt3 = Convert.ToInt32(tt2);
                             result.Add(new AdminPatientView()
                             {
                                 patientid = Convert.ToInt32(dbDataRecord["patientid"]),
@@ -369,6 +365,7 @@ namespace hospital.Controllers
         public void RegisterDoctor([FromQuery] string Name, [FromQuery]  int Phone, [FromQuery]  string Address, [FromQuery] string Birthday,
             [FromQuery] string Start, [FromQuery] string End, [FromQuery] int Position, [FromQuery] int ID)
         {
+            //TODO: date validation - 31 april check
             using (NpgsqlCommand npgSqlCommand = new NpgsqlCommand("INSERT INTO doctors (ID, Name, Phone, Address, BD, WorkStart, WorkEnd, Hired, PositionCode) VALUES ("
                 + ID + ", '" + Name + "', " + Phone + ", '" + Address + "', '" + Birthday + "', '" + Start + "', '" + End + "', '"
                 + DateTime.Today + "', " + Position + ");", npgSqlConnection))
@@ -451,7 +448,6 @@ namespace hospital.Controllers
             }
             npgSqlConnection.Close();
         }
-
 
         public class AdminDoctorView
         {
