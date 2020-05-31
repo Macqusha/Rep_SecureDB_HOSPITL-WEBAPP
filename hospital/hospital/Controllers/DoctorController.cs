@@ -41,8 +41,8 @@ namespace hospital.Controllers
                                 name = dbDataRecord["name"].ToString(),
                                 phone = Convert.ToInt32(dbDataRecord["phone"]),
                                 bd = DateTime.Parse(dbDataRecord["bd"].ToString()),
-                                passportserial = Convert.ToInt32(Crypto.Decrypt(dbDataRecord["passportserial"].ToString())),
-                                passportnumber = Convert.ToInt32(Crypto.Decrypt(dbDataRecord["passportnumber"].ToString())),
+                                passportserial = Crypto.Decrypt(dbDataRecord["passportserial"].ToString()),
+                                passportnumber = Crypto.Decrypt(dbDataRecord["passportnumber"].ToString()),
                                 room = doformatINT(dbDataRecord["room"].ToString()),
                                 patientid = Convert.ToInt32(dbDataRecord["patientid"]),
                             });
@@ -105,8 +105,8 @@ namespace hospital.Controllers
                                 name = dbDataRecord["name"].ToString(),
                                 phone = Convert.ToInt32(dbDataRecord["phone"]),
                                 bd = DateTime.Parse(dbDataRecord["bd"].ToString()),
-                                passportserial = Convert.ToInt32(Crypto.Decrypt(dbDataRecord["passportserial"].ToString())),
-                                passportnumber = Convert.ToInt32(Crypto.Decrypt(dbDataRecord["passportnumber"].ToString())),
+                                passportserial = Crypto.Decrypt(dbDataRecord["passportserial"].ToString()),
+                                passportnumber = Crypto.Decrypt(dbDataRecord["passportnumber"].ToString()),
                                 arrival = doformatDT(dbDataRecord["arrival"].ToString()),
                                 departure = doformatDT(dbDataRecord["departure"].ToString()),
                                 patientid = Convert.ToInt32(dbDataRecord["patientid"]),
@@ -200,8 +200,8 @@ namespace hospital.Controllers
             public string name { get; set; }
             public int phone { get; set; }
             public DateTime bd { get; set; }
-            public int passportserial { get; set; }
-            public int passportnumber { get; set; }
+            public string passportserial { get; set; }
+            public string passportnumber { get; set; }
             public int? room { get; set; }
             public int patientid { get; set; }
         }
@@ -212,8 +212,8 @@ namespace hospital.Controllers
             public string name { get; set; }
             public int phone { get; set; }
             public DateTime bd { get; set; }
-            public int passportserial { get; set; }
-            public int passportnumber { get; set; }
+            public string passportserial { get; set; }
+            public string passportnumber { get; set; }
             public DateTime? arrival { get; set; }
             public DateTime? departure { get; set; }
             public int patientid { get; set; }
