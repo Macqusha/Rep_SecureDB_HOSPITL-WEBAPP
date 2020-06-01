@@ -74,7 +74,9 @@ namespace hospital
                 if (env.IsDevelopment())
                 {
                     //spa.UseAngularCliServer(npmScript: "start");                 //Development without frontend auto update
-                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4200/"); // Marina's notice: To start type "npm start" in Windows Power Shell. Frontend auto update is on.
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4200/"); 
+                    // Marina's notice: To start type "npm start" in Windows Power Shell. Frontend auto update is on.
+                    // Directory should be .../hospital/hospital/ClientApp/
                 }
             });
 
